@@ -46,6 +46,15 @@
 		padding: 20px;
 		border-radius: 10px;
 	}
+	#resetBtn {
+		display: none;
+	}
+	#stopBtn {
+		display: none;
+	}
+	#resumeBtn {
+		display: none;
+	}
 
 </style>
 <body>
@@ -53,17 +62,20 @@
 		<canvas id="canvas" width="1300" height="800"></canvas>
 	</div>
 
-	<!-- <h4 class="headline">Select your options:</h4>
-	<select id="speed" onchange="changeSpeed()">
-		<option value="300">easy</option>
-		<option value="200">medium</option>
+	<h4 class="headline">Select your options:</h4>
+	<select id="speed">
+		<option value="300">easy</option>  <!--onchange="changeSpeed()">-->
+		<option value="200" selected>medium</option>
 		<option value="100">hard</option>
-	</select>-->
-	<select id="walls" onchange="changeWall()">
-		<option value="false">don't touch the walls</option>
+	</select>
+	<select id="walls">
+		<option value="false" selected>don't touch the walls</option>
 		<option value="true">go throw the walls</option>
 	</select>
-	<button id="startBtn">Start</button> 
+	<button type="button" id="startBtn">Start</button> 
+	<button type="button" id="resetBtn">Reset</button>
+	<button type="button" id="stopBtn">Stop</button> 
+	<button type="button" id="resumeBtn">Resume</button> 
 
 <script>
 	var canvas = document.getElementById('canvas');
@@ -75,8 +87,10 @@
 	var food;
 	var foodFirstPoint = 50;
 	var foodSecondPoint = 100;
-	var speed = 200;
 	var start = false;
+	var wall = document.getElementById('walls');
+	var wallRun = wall.options[wall.selectedIndex].value;
+	var running = false;
 
 	var foodArrayWidth = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900,950, 1000, 1050, 1100, 1150, 1200];
 	var foodArrayHeight = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700];
@@ -89,6 +103,51 @@
 	var snakeFoodyOne = foodSecondPoint + foody;
 	var snakeFoodyTwo = foodFirstPoint + foody;
 
+	document.getElementById('startBtn').onclick = function() {
+		if (start == false) {
+			running = true
+			start = true;
+			var timeSpeed = document.getElementById("speed");
+			speed = timeSpeed.options[timeSpeed.selectedIndex].value; //priview which option is selected and take the value from
+			speedSetting = setInterval(generateSnake, speed);
+			init();
+			changeWall();
+			document.getElementById('resetBtn').style.display = 'block';
+			document.getElementById('startBtn').style.display = 'none';
+			document.getElementById('stopBtn').style.display = 'block'; //should be display none as default
+		}
+	};
+
+	document.getElementById('resetBtn').onclick = function() {
+		if (start == true) {
+			start = false
+			generateSnake();
+			clearInterval(speedSetting);  //clears a timeset (for example a new interval)
+			document.getElementById('resetBtn').style.display = 'none';
+			document.getElementById('startBtn').style.display = 'block';
+			document.getElementById('stopBtn').style.display = 'none';
+			document.getElementById('resumeBtn').style.display = 'none';
+		}
+	};
+
+	document.getElementById('stopBtn').onclick = function() {
+		if (running == true) {
+			running = false;
+			clearInterval(speedSetting);
+			document.getElementById('stopBtn').style.display = 'none';
+			document.getElementById('resumeBtn').style.display = 'block';
+		}
+	};
+
+	document.getElementById('resumeBtn').onclick = function() {
+		if (running == false) {
+			running = true;
+			speedSetting = setInterval(generateSnake, speed);
+			document.getElementById('stopBtn').style.display = 'block';
+			document.getElementById('resumeBtn').style.display = 'none';
+		}
+	};
+
 	function init(){
 		key = 'right';
 		score = 0;
@@ -99,8 +158,6 @@
 		];
 		createFood();
 	}
-
-	init();
 	
     document.addEventListener('keydown', function(e){
         var keyCode = e.keyCode;
@@ -117,44 +174,6 @@
             key = 'down';
         } 
     });
-
-    document.addEventListener("keydown", keysPressed, false);
-    document.addEventListener("keydown", keysReleased, false);
-
-    function keysPressed(e) {
-        // store an entry for every key pressed
-        keys[e.keyCode] = true;
-        // left
-        if (keys[37]) {
-            if (key !== 'right') {
-                key = 'left';
-            }
-        }
-        // right
-        if (keys[39]) {
-            if (key !== 'left') {
-                key = 'right';
-            }
-        }
-        // down
-        if (keys[38]) {
-            if (key !== 'up') {
-                key = 'down';
-            }
-        }
-        // up
-        if (keys[40]) {
-            if (key !== 'down') {
-                key = 'up';
-            }
-        }
-        // e.preventDefault(); //only when you want to move aslant
-    }
-
-    function keysReleased(e) {
-        // mark keys that were released
-        keys[e.keyCode] = false;
-	}
 	
 	function createFood() {
         foodx = foodArrayWidth[Math.floor(Math.random() * foodArrayWidth.length)];
@@ -211,104 +230,60 @@
 				ctx.fillStyle = "green";
 			}
 			
-			changeWall();
+			if (wallRun == 'true') {
+				if(ball.x > 1300){
+					ball.x = 0;
+				}
+				if(ball.x < 0){
+					ball.x = 1300;
+				}
+				if(ball.y > 800){
+					ball.y = 0;
+				}
+				if(ball.y < 0){
+					ball.y = 800;
+				}
+			} else {
+				if(ball.x > 1300){
+					alert("Game Over! Your Score Is: " + score);
+					init();
+				}
+				if(ball.x < 0){
+					alert("Game Over! Your Score Is: " + score);
+					init();
+				}
+				if(ball.y > 800){
+					alert("Game Over! Your Score Is: " + score);
+					init();
+				}
+				if(ball.y < 0){
+					alert("Game Over! Your Score Is: " + score);
+					init();
+				}
+			}
 
 			if(ball.x == lastBall.x && ball.y == lastBall.y && i < balls.length - 2){
-				alert("Game Over! Your Score Is :" + score);
+				alert("Game Over! Your Score Is: " + score);
 				init();
 			}
-
-			ctx.fillRect(ball.x, ball.y, 49, 49);
+			if (start == true) {
+				ctx.fillRect(ball.x, ball.y, 49, 49);
+			}
 		}
-		ctx.fillRect(snakeFoodxOne, snakeFoodyTwo, 49, 49);
+		if (start == true) {
+			ctx.fillRect(snakeFoodxOne, snakeFoodyTwo, 49, 49);
+		}
 	}
+	// balls = [
+	// 		{x:50, y:50},
+	// 		{x:100, y:50},
+	// 		{x:150, y:50}
+	// 	];
 
 	function changeWall() {
-		var wall = document.getElementById('walls').value;
-	console.log(wall);
-		if (wall == true) {
-			if(ball.x > 1300){
-				ball.x = 0;
-			}
-			if(ball.x < 0){
-				ball.x = 1300;
-			}
-			if(ball.y > 800){
-				ball.y = 0;
-			}
-			if(ball.y < 0){
-				ball.y = 800;
-			}
-		} else {
-			if(ball.x > 1300){
-				alert("Game Over! Your Score Is :" + score);
-				init();
-			}
-			if(ball.x < 0){
-				alert("Game Over! Your Score Is :" + score);
-				init();
-			}
-			if(ball.y > 800){
-				alert("Game Over! Your Score Is :" + score);
-				init();
-			}
-			if(ball.y < 0){
-				alert("Game Over! Your Score Is :" + score);
-				init();
-			}
-		}
+		wall = document.getElementById('walls');
+		wallRun = wall.options[wall.selectedIndex].value;
 	}
-
-	// 	// document.getElementById('startBtn').onclick = function() {
-	// // 	start = true;
-	// // 	init();
-	// // 	start();
-	// // }
-	// // var gSpeed = setInterval(generateSnake, 300);
-		
-	// // 	function changeSpeed(){
-	// // 		var tspeed = document.getElementById("speed");
-	// // 		var speed = tspeed.options[tspeed.selectedIndex].value;
-	
-	// // 		clearInterval(gSpeed);
-	// // 		gSpeed = setInterval(generateSnake, speed);
-	// // 	}
-	
-	
-	// // window.onload = function() {
-		
-	// // 	var yourSpeed = document.getElementById('speed');
-	// // 	yourSpeed.addEventListener("change", function() {
-	// // 		var kmh = yourSpeed.value;
-	// // 	console.log(kmh);
-	// // 	console.log('kmh');
-	// // 	});
-
-	// // 	var wall = document.getElementById('walls');
-	// // 	wall.addEventListener("change", function() {
-	// // 		var wallHit = wall.value;
-	// // 	console.log(wallHit);
-	// // 	console.log('kmh');
-	// // 	});
-	// // }
-
-	// // function start() {
-	// 	var snake = setInterval(generateSnake, 300);
-	// // }
-
-	// var gSpeed = setInterval(generateSnake, 300);
-	
-	// function changeSpeed(){
-	// 	var tspeed = document.getElementById("speed");
-	// 	var speed = tspeed.options[tspeed.selectedIndex].value;
-
-	// 	clearInterval(gSpeed);
-	// 	gSpeed = setInterval(generateSnake, speed);
-	// }
-
-	setInterval(generateSnake, speed);
-
-
 
 </script>
 </body>

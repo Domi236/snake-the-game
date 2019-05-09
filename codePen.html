@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Snake Game</title>
+</head>
+<body>
+	<div style="width: 888px; margin: auto">
+		<canvas id="myCanvas" width="800" height="500" style="background: black"></canvas>
+	</div>
+
+	<h4>Select a option:</h4>
+	<select name="" id="speed" onchange="changeSpeed()">
+		<option value="300">easy</option>
+		<option value="200">mediam</option>
+		<option value="100">hard</option>
+	</select>
+
+	<script>
+		var canvas = document.getElementById('myCanvas');
+		var ctx = canvas.getContext('2d');
+		var dir, score, balls, food;
+
+		function init(){
+			dir = 'right';
+			score = 0;
+			balls = [
+				{x:40, y:40},
+				{x:60, y:40},
+				{x:80, y:40}
+			];
+
+			createFood();
+		}
+
+		function createFood(){
+			food = {
+				x: Math.floor(Math.random()*39),
+				y: Math.floor(Math.random()*24)
+			}
+
+			for(var i = 0; i<balls.length; i++){
+				var ball = balls[i];
+
+				if(food.x*20 == ball.x && food.y*20 == ball.y){
+					createFood();
+				}
+			}
+		}
+
+		init();
+
+		document.addEventListener('keydown', function(e){
+			var keyCode = e.keyCode;
+			if(keyCode == 37 && dir != 'right'){
+				dir = 'left';
+			} 
+			if(keyCode == 38 && dir != 'down'){
+				dir = 'up';
+			}
+			if(keyCode == 39 && dir != 'left'){
+				dir = 'right';
+			}
+			if(keyCode == 40 && dir != 'up'){
+				dir = 'down';
+			} 
+		});
+
+		function add(){
+			var lastBall = balls[balls.length-1];
+			if(dir == 'right'){
+				balls.push({x:lastBall.x+20, y:lastBall.y});
+			}
+			if(dir == 'down'){
+				balls.push({x:lastBall.x, y:lastBall.y+20});
+			}
+			if(dir == 'left'){
+				balls.push({x:lastBall.x-20, y:lastBall.y});
+			}
+			if(dir == 'up'){
+				balls.push({x:lastBall.x, y:lastBall.y-20});
+			}
+		}
+
+		function ani(){
+			ctx.clearRect(0,0, 888, 555);
+			balls.shift();
+			add();
+			var lastBall = balls[balls.length-1];
+
+			if(lastBall.x == food.x*20 && lastBall.y == food.y*20){
+				score += 5;
+				add();
+				createFood();
+			}
+
+			for(var i = 0; i<balls.length; i++){
+				ball = balls[i];
+
+				if(i == balls.length-1){
+					ctx.fillStyle = "lightgreen";
+				} else{
+					ctx.fillStyle = "#ff0000";
+				}
+				if(ball.x > 780){
+					ball.x = 0;
+				}
+				if(ball.x < 0){
+					ball.x = 780;
+				}
+				if(ball.y > 480){
+					ball.y = 0;
+				}
+				if(ball.y < 0){
+					ball.y = 480;
+				}
+
+				if(ball.x == lastBall.x && ball.y == lastBall.y && i < balls.length-2){
+					alert("Game Over. Your Score Is :" +score);
+					init();
+				}
+
+				ctx.fillRect(ball.x, ball.y, 19, 19);
+			}
+			ctx.fillRect(food.x*20, food.y*20, 19, 19);
+			ctx.fillText("Store: "+ score, 480, 480);
+		}
+
+	var gSpeed = setInterval(ani, 300);
+		
+    function changeSpeed(){
+    	var tspeed = document.getElementById("speed");
+        var speed = tspeed.options[tspeed.selectedIndex].value;
+
+        clearInterval(gSpeed);
+        gSpeed = setInterval(ani, speed);
+    }
+		
+
+
+	</script>
+</body>
+</html>
