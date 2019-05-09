@@ -11,6 +11,8 @@
         height: 100%;
         padding: 0;
         margin: 0;
+		font-family: Arial, Helvetica, sans-serif;
+		text-align: center;
     }
     #canvas {
         background:#c7a384;
@@ -18,7 +20,10 @@
 		margin-left: 5%;
 		margin-top: 2%;
     }
-	.headline {
+	li, img, select:hover {
+		cursor: pointer;
+	}
+	/* .headline {
 		position: absolute;
 		right: 7%;
 		top: 0;
@@ -26,50 +31,115 @@
 		height: auto;
 		font-size: 40px;
 		text-align: center;
-	}
+	} */
 	#speed {
 		position: absolute;
-		right: 10%;
-		top: 12%;
-		width: 220px;
-		height: auto;
+		left: 100%;
+		top: 42.5%;
+		color: red;
+		font-weight: bold;
 		font-size: 40px;
 		padding: 20px;
-		border-radius: 10px;
+		background: inherit;
+		border: none;
 	}
 	#walls {
 		position: absolute;
-		right: 2%;
-		top: 22%;
-		width: 440px;
-		height: auto;
 		font-size: 40px;
 		padding: 20px;
-		border-radius: 10px;
+		left: 71%;
+		top: 57%;
+		color: red;
+		font-weight: bold;
+		background: inherit;
+		border: none;
 	}
-	#resetBtn {
+	/* #resetBtn {
 		display: none;
-	}
+	} */
 	/* #stopBtn {
 		display: none;
 	} */
-	#resumeBtn {
+	/* #resumeBtn {
 		display: none;
-	}
+	} */
 	#settings {
 		position: absolute;
 		width: 70px;
-		top: 1%;
-		left: 1%;
+		top: 20px;
+		left: 20px;
+	}
+	#resetBtn {
+		position: absolute;
+		width: 70px;
+		top: 20px;
+		left: 100px;
+	}
+	#start {
+		position: absolute;
+		width: 70px;
+		top: 20px;
+		left: 180px;
+	}
+	.content__header {
+		position: absolute;
+		width: 100%;
+		height: 100%;		
+		background: black;
+		opacity: 0.7;
+	}
+	.content__header-menu {
+		position: absolute;
+		left: 50%;
+		top: 30%;
+		transform: translate(-50%, -50%);
+		color: lightgreen;
+		font-size: 50px;
+		list-style: none;
+		font-weight: bold;
+	}
+	.content__header-menu-toggle {
+		padding: 10px;
+		text-shadow: 8px 5px 5px rgb(187, 107, 61, 0.4);
+	}
+	.content__header-menu-toggle:hover {
+		text-decoration: underline;
 	}
 
 </style>
 <body>
+<section id="content__header" class="content__header">
+	<ul id="content__header-menu" class="content__header-menu">
+		<li id="resumeBtn" class="content__header-menu-toggle">Zurück</li>
+		<li id="startBtn" class="content__header-menu-toggle">SinglePlayer</li> <!-- 3 seconds before game start-->
+		<li class="content__header-menu-toggle">Mehrspieler</li>
+		<li id="difficulty" class="content__header-menu-toggle">Schwierigkeitsgrad:
+			<select id="speed">
+				<option class="content__header-difficulty-toggle" value="300">easy</option> 
+				<option class="content__header-difficulty-toggle" value="200" selected>medium</option>
+				<option class="content__header-difficulty-toggle" value="100">hard</option>
+			</select>
+		</li> <!--range Slider-->
+		<li id="wallHit" class="content__header-menu-toggle">Wände:
+			<select id="walls">
+				<option class="content__header-wall-toggle" value="false" selected>don't touch the walls</option>
+				<option class="content__header-wall-toggle" value="true">go throw the walls</option>
+			</select>
+		</li>
+		<li class="content__header-menu-toggle">items</li>  <!--available which items drop, dropchance, when item should drop etc.-->
+		<li class="content__header-menu-toggle">options</li> <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
+	</ul>
+</section>
+
+<section class="content__game">
+		<img id="settings" src="assets/images/settings.png"/>
+		<img id="resetBtn" src="assets/images/refresh.png"/>
+		<img id="start" src="assets/images/start.png"/>
 	<div>
 		<canvas id="canvas" width="1300" height="800"></canvas>
 	</div>
 
-	<h4 class="headline">Select your options:</h4>
+	<!-- <h4 class="headline">Select your options:</h4>
 	<select id="speed">
 		<option value="300">easy</option> 
 		<option value="200" selected>medium</option>
@@ -78,12 +148,12 @@
 	<select id="walls">
 		<option value="false" selected>don't touch the walls</option>
 		<option value="true">go throw the walls</option>
-	</select>
-	<button type="button" id="startBtn">Start</button> 
+	</select> -->
+	<!-- <button type="button" id="startBtn">Start</button> 
 	<button type="button" id="resetBtn">Reset</button>
-	<!-- <button type="button" id="stopBtn">Stop</button>  -->
-	<button type="button" id="resumeBtn">Resume</button> 
-	<img id="settings" src="assets/images/settings.png"/>
+	<button type="button" id="stopBtn">Stop</button>
+	<button type="button" id="resumeBtn">Resume</button>  -->
+</section>
 
 <script>
 	class Snake {
@@ -101,7 +171,6 @@
 			this.wallRun = this.wall.options[this.wall.selectedIndex].value;
 			this.running = false
 			this.moveSnake = false;
-			// this.speedSetting = [];
 
 			this.balls = [
 				{x:50, y:50},
@@ -123,6 +192,7 @@
 			this.snakeFoodyTwo = this.foodFirstPoint + this.foody;	
 
 			document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+			document.getElementById('start').addEventListener('click', () => this.startGame());
 			document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
 			document.getElementById('settings').addEventListener('click', () => this.stopGame());
 			document.getElementById('resumeBtn').addEventListener('click', () => this.resumeGame());
@@ -145,6 +215,17 @@
 
 			this.timeSpeed = document.getElementById("speed");
 			this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value; //priview which option is selected and take the value from
+
+			this.menu = document.getElementById('content__header');
+			this.menuItem =  Array.prototype.slice.call(document.querySelectorAll('.content__header-menu-toggle'));
+
+			// for (var i = 0; i < this.menuItem.length; ++i) {
+			// 	this.menuItem[i].addEventListener('click', () => this.closeMenuToggle());
+			// }
+		}
+
+		closeMenuToggle() {
+			this.menu.style.display = 'none';
 		}
 
 		startGame() {
@@ -152,15 +233,14 @@
 				this.running = true;
 				this.start = true;
 				this.moveSnake = true;
-				this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value;
+				// this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value;
 				this.init();
-				// this.speedSetting = setInterval(this.generateSnake(), this.speed);
 				this.generateSnake();
 				this.changeWall();
-				document.getElementById('resetBtn').style.display = 'block';
-				document.getElementById('startBtn').style.display = 'none';
-				document.getElementById('settings').style.display = 'block'; //should be display none as default
-				console.log(this.speedSetting);
+				this.closeMenuToggle();
+				// document.getElementById('resetBtn').style.display = 'block';
+				// document.getElementById('startBtn').style.display = 'none';
+				//document.getElementById('settings').style.display = 'block'; //should be display none as default
 			}
 		}
 
@@ -171,10 +251,10 @@
 				this.generateSnake();
 				clearInterval(this.speedSetting);  //clears a timeset (for example a new interval)	
 				this.ctx.clearRect(0, 0, 1300, 800);
-				document.getElementById('resetBtn').style.display = 'none';
-				document.getElementById('startBtn').style.display = 'block';
-				// document.getElementById('settings').style.display = 'none';
-				document.getElementById('resumeBtn').style.display = 'none';
+				// document.getElementById('resetBtn').style.display = 'none';
+				// document.getElementById('startBtn').style.display = 'block';
+				// // document.getElementById('settings').style.display = 'none';
+				// document.getElementById('resumeBtn').style.display = 'none';
 			}
 		}
 
@@ -182,18 +262,20 @@
 			if (this.running == true) {
 				this.running = false;
 				clearInterval(this.speedSetting);
-				document.getElementById('settings').style.display = 'none';
-				document.getElementById('resumeBtn').style.display = 'block';
+				// document.getElementById('settings').style.display = 'none';
+				// document.getElementById('resumeBtn').style.display = 'block';
+				this.menu.style.display = 'block';
 			}
-			// document.getElementsByClassName('content').create('div')
+			// document.getElementsByClassName('menu').innerHTML = 
 		}
 
 		resumeGame() {
 			if (this.running == false) {
 				this.running = true;
 				this.generateSnake();
-				document.getElementById('settings').style.display = 'block';
-				document.getElementById('resumeBtn').style.display = 'none';
+				this.menu.style.display = 'none';
+				// document.getElementById('settings').style.display = 'block';
+				// document.getElementById('resumeBtn').style.display = 'none';
 			}
 		}
 
