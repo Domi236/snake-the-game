@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Snake The Game</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>snake-the-game</title>
 </head>
 <style>
     html {
@@ -13,240 +13,323 @@
         margin: 0;
     }
     #canvas {
-        background:grey;
-        border: 10px solid crimson;
+        background:#c7a384;
+        border: 10px solid black;
+		margin-left: 5%;
+		margin-top: 2%;
     }
+	.headline {
+		position: absolute;
+		right: 7%;
+		top: 0;
+		width: auto;
+		height: auto;
+		font-size: 40px;
+		text-align: center;
+	}
+	#speed {
+		position: absolute;
+		right: 10%;
+		top: 12%;
+		width: 220px;
+		height: auto;
+		font-size: 40px;
+		padding: 20px;
+		border-radius: 10px;
+	}
+	#walls {
+		position: absolute;
+		right: 2%;
+		top: 22%;
+		width: 440px;
+		height: auto;
+		font-size: 40px;
+		padding: 20px;
+		border-radius: 10px;
+	}
+	#resetBtn {
+		display: none;
+	}
+	/* #stopBtn {
+		display: none;
+	} */
+	#resumeBtn {
+		display: none;
+	}
+	#settings {
+		position: absolute;
+		width: 70px;
+		top: 1%;
+		left: 1%;
+	}
 
 </style>
 <body>
+	<div>
+		<canvas id="canvas" width="1300" height="800"></canvas>
+	</div>
 
-    
-<canvas id="canvas" width="1300" height="800"></canvas>
+	<h4 class="headline">Select your options:</h4>
+	<select id="speed">
+		<option value="300">easy</option> 
+		<option value="200" selected>medium</option>
+		<option value="100">hard</option>
+	</select>
+	<select id="walls">
+		<option value="false" selected>don't touch the walls</option>
+		<option value="true">go throw the walls</option>
+	</select>
+	<button type="button" id="startBtn">Start</button> 
+	<button type="button" id="resetBtn">Reset</button>
+	<!-- <button type="button" id="stopBtn">Stop</button>  -->
+	<button type="button" id="resumeBtn">Resume</button> 
+	<img id="settings" src="assets/images/settings.png"/>
 
 <script>
-    var canvas = document.querySelector('canvas');
-    var ctx = canvas.getContext("2d");
-    var snakeTail = canvas.getContext("2d");
+	class Snake {
+		constructor() {
+			this.canvas = document.getElementById('canvas');
+			this.ctx = this.canvas.getContext('2d');
+			this.keys = [];
+			this.key = 'right';
+			this.score = 0;
+			this.balls = [];
+			this.foodFirstPoint = 50;
+			this.foodSecondPoint = 100;
+			this.start = false;
+			this.wall = document.getElementById('walls');
+			this.wallRun = this.wall.options[this.wall.selectedIndex].value;
+			this.running = false
+			this.moveSnake = false;
+			// this.speedSetting = [];
 
-    document.addEventListener("keydown", keysPressed, false);
-    document.addEventListener("keydown", keysReleased, false);
+			this.balls = [
+				{x:50, y:50},
+				{x:100, y:50},
+				{x:150, y:50}
+			];
+			this.lastBall = [];
+			
 
-    window.onload = function setup() {
-        food();
-        setInterval(drawSquare, 500);
-    }
-    var tx = 0;
-    var ty = 0;
-    var path = [0];
-    var keys = [];
-    var x = 0;
-    var y = 0;
-    var deltaX = 50;
-    var deltaY = 0;
-    var foodx = (Math.random() * innerWidth);
-    var foody = (Math.random() * innerHeight);
-    var squareFirstPoint = 50;
-    var squareSecondPoint = 100;
+			this.foodArrayWidth = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900,950, 1000, 1050, 1100, 1150, 1200];
+			this.foodArrayHeight = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700];
 
-    var foodArrayWidth = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900,950, 1000, 1050, 1100, 1150, 1200];
-    var foodArrayHeight = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700];
+			this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
+			this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
 
-    function drawSquare(){
-        
-        // snakeTail.clearRect(x, y, canvas.width, canvas.height);
-        ctx.clearRect(x, y, canvas.width, canvas.height); // Der Aufruf von clearRect stellt sicher, dass wir unsere Leinwand löschen, bevor wir versuchen, unser Quadrat neu zu zeichnen.
-        //the square
-        ctx.beginPath();
-        ctx.moveTo(50 + x, 50 + y);
-        ctx.lineTo(100 + x, 50 + y);
-        ctx.lineTo(100 + x, 100 + y);
-        ctx.lineTo(50 + x, 100 + y);
-        ctx.closePath();
-        // ctx.fillRect(50 + x, 50 + y, 100 + x, 100 + y);
-        
-        ctx.fillStyle = "green";
-        ctx.fill();
+			this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
+			this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
+			this.snakeFoodyOne = this.foodSecondPoint + this.foody;
+			this.snakeFoodyTwo = this.foodFirstPoint + this.foody;	
 
-        if (x + 150 > 1300 || x < 0) {
-            deltaX = -deltaX;
-        }
-        if (y + 150 > 800 || y < 0) {
-            deltaY = -deltaY;
-        }
+			document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+			document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
+			document.getElementById('settings').addEventListener('click', () => this.stopGame());
+			document.getElementById('resumeBtn').addEventListener('click', () => this.resumeGame());
 
-        ctx.beginPath();
-        ctx.moveTo(snakeFoodxOne, snakeFoodyTwo);
-        ctx.lineTo(snakeFoodxTwo, snakeFoodyTwo);
-        ctx.lineTo(snakeFoodxTwo, snakeFoodyOne);
-        ctx.lineTo(snakeFoodxOne, snakeFoodyOne);
-        ctx.closePath();
-        // ctx.fillRect(snakeFoodxOne, snakeFoodyTwo, snakeFoodxTwo, snakeFoodyOne);
+			document.addEventListener('keydown', (e) => {
+				this.keyCode = e.keyCode;
+				if(this.keyCode == 37 && this.key != 'right'){
+					this.key = 'left';
+				} 
+				if(this.keyCode == 38 && this.key != 'down'){
+					this.key = 'up';
+				}
+				if(this.keyCode == 39 && this.key != 'left'){
+					this.key = 'right';
+				}
+				if(this.keyCode == 40 && this.key != 'up'){
+					this.key = 'down';
+				}
+			});
 
-        ctx.fillStyle = "maroon";
-        ctx.fill();
+			this.timeSpeed = document.getElementById("speed");
+			this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value; //priview which option is selected and take the value from
+		}
 
-        if(snakeFoodxOne == 50 + x && snakeFoodyTwo == 50 + y) {
-            // path.push(1);
-            ctx.fillStyle = "green";
-            ctx.fill();
-            food();
-        }
-        x += deltaX;
-        y += deltaY;
-    }
+		startGame() {
+			if (this.start == false) {
+				this.running = true;
+				this.start = true;
+				this.moveSnake = true;
+				this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value;
+				this.init();
+				// this.speedSetting = setInterval(this.generateSnake(), this.speed);
+				this.generateSnake();
+				this.changeWall();
+				document.getElementById('resetBtn').style.display = 'block';
+				document.getElementById('startBtn').style.display = 'none';
+				document.getElementById('settings').style.display = 'block'; //should be display none as default
+				console.log(this.speedSetting);
+			}
+		}
 
-    // function add(){
-	// 		var lastBall = balls[balls.length-1];
-	// 		if(dir == 'right'){
-	// 			balls.push({x:lastBall.x+20, y:lastBall.y});
-	// 		}
-	// 		if(dir == 'down'){
-	// 			balls.push({x:lastBall.x, y:lastBall.y+20});
-	// 		}
-	// 		if(dir == 'left'){
-	// 			balls.push({x:lastBall.x-20, y:lastBall.y});
-	// 		}
-	// 		if(dir == 'up'){
-	// 			balls.push({x:lastBall.x, y:lastBall.y-20});
-	// 		}
-	// 	}
+		resetGame() {
+			if (this.start == true) {
+				this.start = false;
+				this.moveSnake = false;
+				this.generateSnake();
+				clearInterval(this.speedSetting);  //clears a timeset (for example a new interval)	
+				this.ctx.clearRect(0, 0, 1300, 800);
+				document.getElementById('resetBtn').style.display = 'none';
+				document.getElementById('startBtn').style.display = 'block';
+				// document.getElementById('settings').style.display = 'none';
+				document.getElementById('resumeBtn').style.display = 'none';
+			}
+		}
 
-    // function ani(){
-    //     ctx.clearRect(0,0, 888, 555);
-    //     balls.shift();
-    //     add();
-    //     var lastBall = balls[balls.length-1];
+		stopGame() {
+			if (this.running == true) {
+				this.running = false;
+				clearInterval(this.speedSetting);
+				document.getElementById('settings').style.display = 'none';
+				document.getElementById('resumeBtn').style.display = 'block';
+			}
+			// document.getElementsByClassName('content').create('div')
+		}
 
-    //     if(lastBall.x == food.x*20 && lastBall.y == food.y*20){
-    //         score += 5;
-    //         add();
-    //         createFood();
-    //     }
+		resumeGame() {
+			if (this.running == false) {
+				this.running = true;
+				this.generateSnake();
+				document.getElementById('settings').style.display = 'block';
+				document.getElementById('resumeBtn').style.display = 'none';
+			}
+		}
 
-    //     for(var i = 0; i<balls.length; i++){
-    //         ball = balls[i];
+		init(){
+			this.key = 'right';
+			this.score = 0;
+			this.balls = [
+				{x:50, y:50},
+				{x:100, y:50},
+				{x:150, y:50}
+			];
+			this.createFood();
+		}
+		
+		createFood() {
+			this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
+			this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
 
-    //         if(i == balls.length-1){
-    //             ctx.fillStyle = "lightgreen";
-    //         } else{
-    //             ctx.fillStyle = "#ff0000";
-    //         }
-    //         if(ball.x > 780){
-    //             ball.x = 0;
-    //         }
-    //         if(ball.x < 0){
-    //             ball.x = 780;
-    //         }
-    //         if(ball.y > 480){
-    //             ball.y = 0;
-    //         }
-    //         if(ball.y < 0){
-    //             ball.y = 480;
-    //         }
+			this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
+			this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
+			this.snakeFoodyOne = this.foodSecondPoint + this.foody;
+			this.snakeFoodyTwo = this.foodFirstPoint + this.foody;
 
-    //         if(ball.x == lastBall.x && ball.y == lastBall.y && i < balls.length-2){
-    //             alert("Game Over. Your Score Is :" +score);
-    //             init();
-    //         }
+			this.ctx.beginPath();
+			this.ctx.moveTo(this.snakeFoodxOne, this.snakeFoodyTwo);
+			this.ctx.lineTo(this.snakeFoodxTwo, this.snakeFoodyTwo);
+			this.ctx.lineTo(this.snakeFoodxTwo, this.snakeFoodyOne);
+			this.ctx.lineTo(this.snakeFoodxOne, this.snakeFoodyOne);
+			this.ctx.closePath();
+		}
 
-    //         ctx.fillRect(ball.x, ball.y, 19, 19);
-    //     }
-    //     ctx.fillRect(food.x*20, food.y*20, 19, 19);
-    //     ctx.fillText("Store: "+ score, 480, 480);
-    // }
+		add(){
+			this.lastBall = this.balls[this.balls.length - 1];
+			if(this.key == 'right'){
+				this.balls.push({x:this.lastBall.x + 50, y:this.lastBall.y});
+			}
+			if(this.key == 'down'){
+				this.balls.push({x:this.lastBall.x, y:this.lastBall.y + 50});
+			}
+			if(this.key == 'left'){
+				this.balls.push({x:this.lastBall.x - 50, y:this.lastBall.y});
+			}
+			if(this.key == 'up'){
+				this.balls.push({x:this.lastBall.x, y:this.lastBall.y - 50});
+			}
+		}
 
-    function food() {
-        foodx = foodArrayWidth[Math.floor(Math.random() * foodArrayWidth.length)];
-        foody = foodArrayHeight[Math.floor(Math.random() * foodArrayHeight.length)];
+		generateSnake() {
+			if (this.moveSnake == true) {
+				this.speedSetting = setInterval(() => {
+					this.ctx.clearRect(0, 0, 1300, 800);
+					this.balls.shift(); //delete the last ball
+					this.add();	
+					this.lastBall = this.balls[this.balls.length - 1];
 
-        snakeFoodxOne = squareFirstPoint + foodx;
-        snakeFoodxTwo = squareSecondPoint + foodx;
-        snakeFoodyOne = squareSecondPoint + foody;
-        snakeFoodyTwo = squareFirstPoint + foody;
+					if(this.lastBall.x == this.snakeFoodxOne && this.lastBall.y == this.snakeFoodyTwo){
+						this.score += 5;
+						this.add();
+						this.createFood();
+					}
 
-        ctx.beginPath();
-        ctx.moveTo(snakeFoodxOne, snakeFoodyTwo);
-        ctx.lineTo(snakeFoodxTwo, snakeFoodyTwo);
-        ctx.lineTo(snakeFoodxTwo, snakeFoodyOne);
-        ctx.lineTo(snakeFoodxOne, snakeFoodyOne);
-        ctx.closePath();
+					for(var i = 0; i < this.balls.length; i++){
+						this.ball = this.balls[i];
 
-        
+						if(i == this.balls.length - 1){
+							this.ctx.fillStyle = "maroon";
+						} else{
+							this.ctx.fillStyle = "green";
+						}
+						
+						if (this.wallRun == 'true') {
+							if(this.ball.x > 1300){
+								this.ball.x = 0;
+							}
+							if(this.ball.x < 0){
+								this.ball.x = 1300;
+							}
+							if(this.ball.y > 800){
+								this.ball.y = 0;
+							}
+							if(this.ball.y < 0){
+								this.ball.y = 800;
+							}
+						} else {
+							if(this.ball.x > 1300){
+								alert("Game Over! Your Score Is: " + this.score);
+								this.init();
+							}
+							if(this.ball.x < 0){
+								alert("Game Over! Your Score Is: " + this.score);
+								this.init();
+							}
+							if(this.ball.y > 800){
+								alert("Game Over! Your Score Is: " + this.score);
+								this.init();
+							}
+							if(this.ball.y < 0){
+								alert("Game Over! Your Score Is: " + this.score);
+								this.init();
+							}
+						}
 
-        ctx.fillStyle = "maroon";
-        ctx.fill();
-    }
+						if(this.ball.x == this.lastBall.x && this.ball.y == this.lastBall.y && i < this.balls.length - 2){
+							alert("Game Over! Your Score Is: " + this.score);
+							this.init();
+						}
+						if (this.start == true) {
+							this.ctx.fillRect(this.ball.x, this.ball.y, 49, 49);
+						}
+					}
+					if (this.start == true) {
+						this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 49, 49);
+					}
+					
+				}, this.speed);
+			}
+		}
+		changeWall() {
+			this.wall = document.getElementById('walls');
+			this.wallRun = this.wall.options[this.wall.selectedIndex].value;
+		}
+	}
 
-    function keysPressed(e) {
-        // store an entry for every key pressed
-        keys[e.keyCode] = true;
-        // left
-        if (keys[37]) {
-            if (deltaX !== 50) {
-                deltaY = 0;
-                deltaX = -50;
-            }
-        }
-        // right
-        if (keys[39]) {
-            if (deltaX !== -50) {
-                deltaY = 0;
-                deltaX = 50;
-            }
-        }
-        // down
-        if (keys[38]) {
-            if (deltaY !== 50) {
-                deltaX = 0;
-                deltaY = -50;
-            }
-        }
-        // up
-        if (keys[40]) {
-            if (deltaY !== -50) {
-                deltaX = 0;
-                deltaY = 50;
-            }
-        }
-        // e.preventDefault(); //only when you want to move aslant
-    }
-    
-    function keysReleased(e) {
-        // mark keys that were released
-        keys[e.keyCode] = false;
-    }        
+	var snake = new Snake(
+
+
+    // optional features
+
+);
+	
 
 
 
-    // if (path.length > 1) {
-    //             // x += -deltaX;
-    //             // y += -deltaY;
-    //         for (var i = 0; i < path.length; i++) {
-    //             x += deltaX;
-    //             y += deltaY;
-
-    //             ctx.beginPath();
-    //             ctx.moveTo(50 + x, 50 + y);
-    //             ctx.lineTo(100 + x, 50 + y);
-    //             ctx.lineTo(100 + x, 100 + y);
-    //             ctx.lineTo(50 + x, 100 + y);
-    //             ctx.closePath();
-
-    //          
-    //             ctx.strokeStyle = "grey";
-    //             ctx.stroke();
-    //             ctx.fillStyle = "green";
-    //             ctx.fill();
-
-    //             x += -deltaX;
-    //             y += -deltaY;
-    //             console.log(x);
-    //             console.log(y); 
-    //         }
-    //         // ctx.fillRect(snakeFoodxOne, snakeFoodyTwo, snakeFoodxTwo, snakeFoodyOne);
-    //     }
-    
-    
 </script>
+
+
+
 </body>
 </html>
