@@ -12,43 +12,45 @@
 <body>
 <section id="content__header" class="content__header">
 	<ul id="content__header-menu" class="content__header-menu">
-		<li id="resumeBtn" class="content__header-menu-toggle">Weiter</li>
-		<li id="startBtn" class="content__header-menu-toggle">SinglePlayer</li> <!-- 3 seconds before game start-->
-		<li class="content__header-menu-toggle">Mehrspieler</li>
-		<li id="difficulty" class="content__header-menu-toggle">Schwierigkeitsgrad:
+		<li id="startBtn" class="content__header-menu-toggle">Singleplayer</li>
+		<li class="content__header-menu-toggle">Multiplayer</li>
+		<li id="difficulty" class="content__header-menu-toggle"><span id="difficultyDegreeValue">Normal:</span><br/>
 			<span class="results" id="rangeValue">200</span>
-			<input class="range" id="range" type="range" value="200" min="100" max="500"  step="10" onmousemove="rangeSlider(this.value)" onchange="rangeSlider(this.value)">
+			<input class="range" id="range" type="range" value="200" min="100" max="500"  step="10">
 		</li>
-		<li id="wallHit" class="content__header-menu-toggle">Wände: 
+		<li id="wallHit" class="content__header-menu-toggle">Walls: 
 			<input type="checkbox" id="wallCheck">
 			<label id="wallResult" for="wallCheck" class="results">Aus</label> 
-		<li class="content__header-menu-toggle">items</li>  <!--available which items drop, dropchance, when item should drop etc.-->
-		<li class="content__header-menu-toggle">Steuerung</li> <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
-		<li class="content__header-menu-toggle">options</li> <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
+		<li class="content__header-menu-toggle">Items</li>  <!--available which items drop, dropchance, when item should drop etc.-->
+		<li class="content__header-menu-toggle">Controls</li> <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
+		<li class="content__header-menu-toggle">Options</li> <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
+		<li class="content__header-menu-toggle">Score: <span id="scoreResult" class="results">0</span></li>
+		<li class="content__header-menu-toggle">Highscore: <span id="highscoreResult" class="results">0</span></li>
 	</ul>
+	<img class="content__header-menu-images" id="goBack" src="assets/images/back.png"/>
+		<img class="content__header-menu-images" id="snake" src="assets/images/snake.jpg"/>
+		<img class="content__header-menu-images" id="snakes" src="assets/images/snakes.png"/>
+		<img class="content__header-menu-images" id="difficultyDegree" src="assets/images/difficulty.png"/>
+		<img class="content__header-menu-images" id="walls" src="assets/images/walls.jpg"/>
+		<img class="content__header-menu-images" id="items" src="assets/images/items.png"/>
+		<img class="content__header-menu-images" id="keyboard" src="assets/images/keyboard.png"/>
+		<img class="content__header-menu-images" id="options" src="assets/images/settings.png"/>
 </section>
 
 <section class="content__game">
-		<img id="settings" src="assets/images/settings.png"/>
-		<img id="goBack" src="assets/images/back.png"/>
-		<!-- <img id="resetBtn" src="assets/images/refresh.png"/>
-		<img id="start" src="assets/images/start.png"/> -->
 	<div>
-		<canvas id="canvas" width="1300" height="800"></canvas>
+		<canvas id="canvas" width="1850" height="900"></canvas>
 	</div>
 </section>
-<script src="assets/js/main.js" defer></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
-	Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.
-	Fehlen beide Attribute wird das Script geladen und ausgeführt, dann wird das Laden und Parsen der Seite fortgesetzt.-->
+<script src="assets/js/main.js"></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
+Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.
+Fehlen beide Attribute wird das Script geladen und ausgeführt, dann wird das Laden und Parsen der Seite fortgesetzt.-->
 
 <script>
-function rangeSlider(value) {
-    document.getElementById('rangeValue').innerHTML = value;
-}
+
+var snake = new Snake({});
 
 </script>
-
-
 
 </body>
 </html>

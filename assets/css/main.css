@@ -4,30 +4,29 @@ html {
     padding: 0;
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    /* text-align: center; */
+    
 }
 #canvas {
     background:#c7a384;
     border: 10px solid black;
-    margin-left: 5%;
-    margin-top: 2%;
+    margin-left: 1%;
+    margin-top: 1%;
 }
-
 /*         menu          */
 /*//////////////////////////*/
 
 .content__header {
     position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     width: 570px;
-    height: 80%;		
+    height: 96%;		
     background: black;
     border-radius: 20px;
 }
 .content__header-menu {
     position: absolute;
-    left: 50%;
-    top: 40%;
-    transform: translate(-50%, -50%);
+    /* top: 50%; */
     color: lightgreen;
     font-size: 50px;
     list-style: none;
@@ -41,13 +40,51 @@ html {
     text-decoration: underline;
 }
 
+.content__header-menu-images {
+    position: absolute;
+    width: 60px;
+}
+#snake {
+    top: 68px;
+    left: 380px;
+}
+#snakes {
+    top: 140px;
+    left: 355px;
+}
+#difficultyDegree {
+    width: 100px;
+    top: 280px;
+    left: 475px;
+}
+#walls {
+    width: 80px;
+    top: 345px;
+    left: 375px;
+}
+#items {
+    width: 100px;
+    top: 408px;
+    left: 200px;
+}
+#keyboard {
+    width: 150px;
+    top: 450px;
+    left: 310px;
+}
+#options {
+    width: 70px;
+    top: 578px;
+    left: 265px;
+}
+
 #difficulty, #wallHit {
     text-decoration: none;
 }
 #range {
     position: absolute;
-    left: 30%;
-    top: 42%;
+    left: 44%;
+    top: 33%;
     font-weight: bold;
     font-size: 40px;
 }
@@ -98,14 +135,11 @@ li, img, select:hover {
     display: none;
 }
 #settings {
-    position: absolute;
-    width: 70px;
     top: 40px;
     left: 475px;
 }
 #goBack {
-    position: absolute;
-    width: 70px;
+    display: none;
     top: 40px;
     left: 475px;
     transform: rotate(180deg);
