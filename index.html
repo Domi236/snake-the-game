@@ -3,411 +3,48 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
 	<title>snake-the-game</title>
 </head>
 <style>
-    html {
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-		font-family: Arial, Helvetica, sans-serif;
-		text-align: center;
-    }
-    #canvas {
-        background:#c7a384;
-        border: 10px solid black;
-		margin-left: 5%;
-		margin-top: 2%;
-    }
-	li, img, select:hover {
-		cursor: pointer;
-	}
-	/* .headline {
-		position: absolute;
-		right: 7%;
-		top: 0;
-		width: auto;
-		height: auto;
-		font-size: 40px;
-		text-align: center;
-	} */
-	#speed {
-		position: absolute;
-		left: 100%;
-		top: 42.5%;
-		color: red;
-		font-weight: bold;
-		font-size: 40px;
-		padding: 20px;
-		background: inherit;
-		border: none;
-	}
-	#walls {
-		position: absolute;
-		font-size: 40px;
-		padding: 20px;
-		left: 71%;
-		top: 57%;
-		color: red;
-		font-weight: bold;
-		background: inherit;
-		border: none;
-	}
-	/* #resetBtn {
-		display: none;
-	} */
-	/* #stopBtn {
-		display: none;
-	} */
-	/* #resumeBtn {
-		display: none;
-	} */
-	#settings {
-		position: absolute;
-		width: 70px;
-		top: 20px;
-		left: 20px;
-	}
-	#resetBtn {
-		position: absolute;
-		width: 70px;
-		top: 20px;
-		left: 100px;
-	}
-	#start {
-		position: absolute;
-		width: 70px;
-		top: 20px;
-		left: 180px;
-	}
-	.content__header {
-		position: absolute;
-		width: 100%;
-		height: 100%;		
-		background: black;
-		opacity: 0.7;
-	}
-	.content__header-menu {
-		position: absolute;
-		left: 50%;
-		top: 30%;
-		transform: translate(-50%, -50%);
-		color: lightgreen;
-		font-size: 50px;
-		list-style: none;
-		font-weight: bold;
-	}
-	.content__header-menu-toggle {
-		padding: 10px;
-		text-shadow: 8px 5px 5px rgb(187, 107, 61, 0.4);
-	}
-	.content__header-menu-toggle:hover {
-		text-decoration: underline;
-	}
-
+   
 </style>
 <body>
 <section id="content__header" class="content__header">
 	<ul id="content__header-menu" class="content__header-menu">
-		<li id="resumeBtn" class="content__header-menu-toggle">Zurück</li>
+		<li id="resumeBtn" class="content__header-menu-toggle">Weiter</li>
 		<li id="startBtn" class="content__header-menu-toggle">SinglePlayer</li> <!-- 3 seconds before game start-->
 		<li class="content__header-menu-toggle">Mehrspieler</li>
 		<li id="difficulty" class="content__header-menu-toggle">Schwierigkeitsgrad:
-			<select id="speed">
-				<option class="content__header-difficulty-toggle" value="300">easy</option> 
-				<option class="content__header-difficulty-toggle" value="200" selected>medium</option>
-				<option class="content__header-difficulty-toggle" value="100">hard</option>
-			</select>
-		</li> <!--range Slider-->
-		<li id="wallHit" class="content__header-menu-toggle">Wände:
-			<select id="walls">
-				<option class="content__header-wall-toggle" value="false" selected>don't touch the walls</option>
-				<option class="content__header-wall-toggle" value="true">go throw the walls</option>
-			</select>
+			<span class="results" id="rangeValue">200</span>
+			<input class="range" id="range" type="range" value="200" min="100" max="500"  step="10" onmousemove="rangeSlider(this.value)" onchange="rangeSlider(this.value)">
 		</li>
+		<li id="wallHit" class="content__header-menu-toggle">Wände: 
+			<input type="checkbox" id="wallCheck">
+			<label id="wallResult" for="wallCheck" class="results">Aus</label> 
 		<li class="content__header-menu-toggle">items</li>  <!--available which items drop, dropchance, when item should drop etc.-->
+		<li class="content__header-menu-toggle">Steuerung</li> <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
 		<li class="content__header-menu-toggle">options</li> <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
 	</ul>
 </section>
 
 <section class="content__game">
 		<img id="settings" src="assets/images/settings.png"/>
-		<img id="resetBtn" src="assets/images/refresh.png"/>
-		<img id="start" src="assets/images/start.png"/>
+		<img id="goBack" src="assets/images/back.png"/>
+		<!-- <img id="resetBtn" src="assets/images/refresh.png"/>
+		<img id="start" src="assets/images/start.png"/> -->
 	<div>
 		<canvas id="canvas" width="1300" height="800"></canvas>
 	</div>
-
-	<!-- <h4 class="headline">Select your options:</h4>
-	<select id="speed">
-		<option value="300">easy</option> 
-		<option value="200" selected>medium</option>
-		<option value="100">hard</option>
-	</select>
-	<select id="walls">
-		<option value="false" selected>don't touch the walls</option>
-		<option value="true">go throw the walls</option>
-	</select> -->
-	<!-- <button type="button" id="startBtn">Start</button> 
-	<button type="button" id="resetBtn">Reset</button>
-	<button type="button" id="stopBtn">Stop</button>
-	<button type="button" id="resumeBtn">Resume</button>  -->
 </section>
+<script src="assets/js/main.js" defer></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
+	Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.
+	Fehlen beide Attribute wird das Script geladen und ausgeführt, dann wird das Laden und Parsen der Seite fortgesetzt.-->
 
 <script>
-	class Snake {
-		constructor() {
-			this.canvas = document.getElementById('canvas');
-			this.ctx = this.canvas.getContext('2d');
-			this.keys = [];
-			this.key = 'right';
-			this.score = 0;
-			this.balls = [];
-			this.foodFirstPoint = 50;
-			this.foodSecondPoint = 100;
-			this.start = false;
-			this.wall = document.getElementById('walls');
-			this.wallRun = this.wall.options[this.wall.selectedIndex].value;
-			this.running = false
-			this.moveSnake = false;
-
-			this.balls = [
-				{x:50, y:50},
-				{x:100, y:50},
-				{x:150, y:50}
-			];
-			this.lastBall = [];
-			
-
-			this.foodArrayWidth = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900,950, 1000, 1050, 1100, 1150, 1200];
-			this.foodArrayHeight = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700];
-
-			this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
-			this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
-
-			this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
-			this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
-			this.snakeFoodyOne = this.foodSecondPoint + this.foody;
-			this.snakeFoodyTwo = this.foodFirstPoint + this.foody;	
-
-			document.getElementById('startBtn').addEventListener('click', () => this.startGame());
-			document.getElementById('start').addEventListener('click', () => this.startGame());
-			document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
-			document.getElementById('settings').addEventListener('click', () => this.stopGame());
-			document.getElementById('resumeBtn').addEventListener('click', () => this.resumeGame());
-
-			document.addEventListener('keydown', (e) => {
-				this.keyCode = e.keyCode;
-				if(this.keyCode == 37 && this.key != 'right'){
-					this.key = 'left';
-				} 
-				if(this.keyCode == 38 && this.key != 'down'){
-					this.key = 'up';
-				}
-				if(this.keyCode == 39 && this.key != 'left'){
-					this.key = 'right';
-				}
-				if(this.keyCode == 40 && this.key != 'up'){
-					this.key = 'down';
-				}
-			});
-
-			this.timeSpeed = document.getElementById("speed");
-			this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value; //priview which option is selected and take the value from
-
-			this.menu = document.getElementById('content__header');
-			this.menuItem =  Array.prototype.slice.call(document.querySelectorAll('.content__header-menu-toggle'));
-
-			// for (var i = 0; i < this.menuItem.length; ++i) {
-			// 	this.menuItem[i].addEventListener('click', () => this.closeMenuToggle());
-			// }
-		}
-
-		closeMenuToggle() {
-			this.menu.style.display = 'none';
-		}
-
-		startGame() {
-			if (this.start == false) {
-				this.running = true;
-				this.start = true;
-				this.moveSnake = true;
-				// this.speed = this.timeSpeed.options[this.timeSpeed.selectedIndex].value;
-				this.init();
-				this.generateSnake();
-				this.changeWall();
-				this.closeMenuToggle();
-				// document.getElementById('resetBtn').style.display = 'block';
-				// document.getElementById('startBtn').style.display = 'none';
-				//document.getElementById('settings').style.display = 'block'; //should be display none as default
-			}
-		}
-
-		resetGame() {
-			if (this.start == true) {
-				this.start = false;
-				this.moveSnake = false;
-				this.generateSnake();
-				clearInterval(this.speedSetting);  //clears a timeset (for example a new interval)	
-				this.ctx.clearRect(0, 0, 1300, 800);
-				// document.getElementById('resetBtn').style.display = 'none';
-				// document.getElementById('startBtn').style.display = 'block';
-				// // document.getElementById('settings').style.display = 'none';
-				// document.getElementById('resumeBtn').style.display = 'none';
-			}
-		}
-
-		stopGame() {
-			if (this.running == true) {
-				this.running = false;
-				clearInterval(this.speedSetting);
-				// document.getElementById('settings').style.display = 'none';
-				// document.getElementById('resumeBtn').style.display = 'block';
-				this.menu.style.display = 'block';
-			}
-			// document.getElementsByClassName('menu').innerHTML = 
-		}
-
-		resumeGame() {
-			if (this.running == false) {
-				this.running = true;
-				this.generateSnake();
-				this.menu.style.display = 'none';
-				// document.getElementById('settings').style.display = 'block';
-				// document.getElementById('resumeBtn').style.display = 'none';
-			}
-		}
-
-		init(){
-			this.key = 'right';
-			this.score = 0;
-			this.balls = [
-				{x:50, y:50},
-				{x:100, y:50},
-				{x:150, y:50}
-			];
-			this.createFood();
-		}
-		
-		createFood() {
-			this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
-			this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
-
-			this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
-			this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
-			this.snakeFoodyOne = this.foodSecondPoint + this.foody;
-			this.snakeFoodyTwo = this.foodFirstPoint + this.foody;
-
-			this.ctx.beginPath();
-			this.ctx.moveTo(this.snakeFoodxOne, this.snakeFoodyTwo);
-			this.ctx.lineTo(this.snakeFoodxTwo, this.snakeFoodyTwo);
-			this.ctx.lineTo(this.snakeFoodxTwo, this.snakeFoodyOne);
-			this.ctx.lineTo(this.snakeFoodxOne, this.snakeFoodyOne);
-			this.ctx.closePath();
-		}
-
-		add(){
-			this.lastBall = this.balls[this.balls.length - 1];
-			if(this.key == 'right'){
-				this.balls.push({x:this.lastBall.x + 50, y:this.lastBall.y});
-			}
-			if(this.key == 'down'){
-				this.balls.push({x:this.lastBall.x, y:this.lastBall.y + 50});
-			}
-			if(this.key == 'left'){
-				this.balls.push({x:this.lastBall.x - 50, y:this.lastBall.y});
-			}
-			if(this.key == 'up'){
-				this.balls.push({x:this.lastBall.x, y:this.lastBall.y - 50});
-			}
-		}
-
-		generateSnake() {
-			if (this.moveSnake == true) {
-				this.speedSetting = setInterval(() => {
-					this.ctx.clearRect(0, 0, 1300, 800);
-					this.balls.shift(); //delete the last ball
-					this.add();	
-					this.lastBall = this.balls[this.balls.length - 1];
-
-					if(this.lastBall.x == this.snakeFoodxOne && this.lastBall.y == this.snakeFoodyTwo){
-						this.score += 5;
-						this.add();
-						this.createFood();
-					}
-
-					for(var i = 0; i < this.balls.length; i++){
-						this.ball = this.balls[i];
-
-						if(i == this.balls.length - 1){
-							this.ctx.fillStyle = "maroon";
-						} else{
-							this.ctx.fillStyle = "green";
-						}
-						
-						if (this.wallRun == 'true') {
-							if(this.ball.x > 1300){
-								this.ball.x = 0;
-							}
-							if(this.ball.x < 0){
-								this.ball.x = 1300;
-							}
-							if(this.ball.y > 800){
-								this.ball.y = 0;
-							}
-							if(this.ball.y < 0){
-								this.ball.y = 800;
-							}
-						} else {
-							if(this.ball.x > 1300){
-								alert("Game Over! Your Score Is: " + this.score);
-								this.init();
-							}
-							if(this.ball.x < 0){
-								alert("Game Over! Your Score Is: " + this.score);
-								this.init();
-							}
-							if(this.ball.y > 800){
-								alert("Game Over! Your Score Is: " + this.score);
-								this.init();
-							}
-							if(this.ball.y < 0){
-								alert("Game Over! Your Score Is: " + this.score);
-								this.init();
-							}
-						}
-
-						if(this.ball.x == this.lastBall.x && this.ball.y == this.lastBall.y && i < this.balls.length - 2){
-							alert("Game Over! Your Score Is: " + this.score);
-							this.init();
-						}
-						if (this.start == true) {
-							this.ctx.fillRect(this.ball.x, this.ball.y, 49, 49);
-						}
-					}
-					if (this.start == true) {
-						this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 49, 49);
-					}
-					
-				}, this.speed);
-			}
-		}
-		changeWall() {
-			this.wall = document.getElementById('walls');
-			this.wallRun = this.wall.options[this.wall.selectedIndex].value;
-		}
-	}
-
-	var snake = new Snake(
-
-
-    // optional features
-
-);
-	
-
-
+function rangeSlider(value) {
+    document.getElementById('rangeValue').innerHTML = value;
+}
 
 </script>
 
