@@ -17,13 +17,17 @@ class Snake {
         this.running = false
         this.moveSnake = false;
         this.counter = false;
+        // this.status = false;
         
-        this.menu = document.getElementById('content__header');
+        this.menu = document.getElementById('content__header-wrapper');
+        this.intro = document.getElementById('content__header-intro-container');
+        this.game = document.getElementById('content__game');
         this.wall = document.getElementById('wallCheck');
         this.scoreValue = document.getElementById('scoreResult');
         this.highscore = document.getElementById('highscoreResult');
         this.difficulty = document.getElementById('difficultyDegreeValue');
         this.input = document.getElementById('range');
+        this.pause = document.getElementById('content__game-pause');
 
         this.balls = [
             {x:50, y:50},
@@ -69,8 +73,11 @@ class Snake {
             if(this.keyCode == 40 && this.key != 'up'){
                 this.key = 'down';
             }
-            if(this.keyCode == 27 || this.keyCode == 32) {
-                this.stopGame();  
+            if(this.keyCode == 27) {
+                this.stopGame();
+            }
+            if(this.keyCode == 32) {
+                this.pauseGame();
             }
         }); 
     }
@@ -104,7 +111,7 @@ class Snake {
             if (this.running == true) {
                 this.running = false;
                 clearInterval(this.speedSetting);
-                this.menu.style.display = 'block';
+                this.openMenuToggle();
                 this.counter = true; 
             } else {
                 this.counter = false;
@@ -113,11 +120,26 @@ class Snake {
         }
     }
 
+    pauseGame() {
+        if (this.startClicked == true) {
+            if (this.running == true) {
+                this.running = false;
+                clearInterval(this.speedSetting);
+                this.counter = true; 
+                this.pause.style.display = 'block';
+            } else {
+                this.counter = false;
+                this.resumeGame();
+                this.pause.style.display = 'none';
+            }
+        }
+    }
+
     resumeGame() {
         if (this.running == false) {
             this.running = true;
             this.generateSnake();
-            this.menu.style.display = 'none';
+            this.closeMenuToggle();
         }
     }
 
@@ -251,9 +273,6 @@ class Snake {
         if (this.speed < 150) {
             this.difficulty.innerHTML = 'Legend:';
         }
-        if (this.speed < 100) {
-            this.difficulty.innerHTML = 'God:';
-        }
         if(this.speed >= 200) {
             this.difficulty.innerHTML = 'Normal:';
         }
@@ -283,7 +302,20 @@ class Snake {
     }
 
     closeMenuToggle() {
-        this.menu.style.display = 'none';
+        this.menu.style.transition = '1s';
+        this.menu.style.transform = 'translateX(-120%)';
+        this.intro.style.transition = '1s';
+        this.intro.style.transform = 'translateX(120%)';
+        this.game.style.transition = '1s';
+        this.game.style.transform = 'translateY(-101%)';
+    }
+    openMenuToggle() {
+        this.menu.style.transition = '1s';
+        this.menu.style.transform = 'translateX(0%)';
+        this.intro.style.transition = '1s';
+        this.intro.style.transform = 'translateX(0%)';
+        this.game.style.transition = '1s';
+        this.game.style.transform = 'translateY(101%)';
     }
 }
 
