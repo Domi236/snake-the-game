@@ -115,6 +115,7 @@ class Snake {
             this.init();
             this.generateSnake();
             this.closeMenuToggle();
+            this.input.style.display = "none";
             this.startClicked = true;
         }
     }
@@ -419,7 +420,7 @@ class Snake {
                     this.ctx.fillStyle = "#DF7401";
                     this.ctx.fill();
                 } 
-                
+                console.log(this.speed);
             }, this.speed);
         }
     }
@@ -465,11 +466,13 @@ class Snake {
         if (this.speed > 350) {
             this.difficulty.innerHTML = 'Stoned:';
         }
+        console.log(this.speed);
     }
 
     rangeSliderReset() {
         this.resetGame();
         this.startGame();
+        console.log(this.speed);
     }
 
     changeWall() {
