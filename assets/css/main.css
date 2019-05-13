@@ -96,8 +96,8 @@ html {
 }
 #range {
     position: absolute;
-    left: 35%;
-    top: 33%;
+    left: 28%;
+    top: 29%;
     font-weight: bold;
     font-size: 40px;
 }
@@ -189,4 +189,19 @@ li, img, select:hover {
     top: 27%;
     left: 40%;
 }
+.content__header-intro-scores-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 34.5% 0 0 58%;
+}
+.content__header-intro-scores {
+    margin: 0;
+    padding: 5px;
+    font-style: italic;
+}
+.resultInt {
+    color: red;
+}
+
 

@@ -2,9 +2,21 @@
 
 class Snake {
     constructor(config) {
-        // this.speed = config.elvalue;
-
         this.speed = typeof this.speed !== 'undefined' ? this.speed: 200;
+
+        //only when multiplayer is active
+        this.multiplayer = false;
+        this.keyPL2 ='leftPL2';
+        this.ballsPL2 = [
+            {x:1800, y:800},   
+            {x:1750, y:800},
+            {x:1850, y:800}
+        ];
+        this.lastBallPL2 = [];
+        this.scorePL2 = 0;
+        this.scoreValuePL2 = document.getElementById('scoreResultPL2');
+        this.highscorePL2 = document.getElementById('highscoreResultPL2'); 
+        ///////////////////////////
 
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
@@ -17,24 +29,18 @@ class Snake {
         this.running = false
         this.moveSnake = false;
         this.counter = false;
-        // this.status = false;
         
         this.menu = document.getElementById('content__header-wrapper');
         this.intro = document.getElementById('content__header-intro-container');
         this.game = document.getElementById('content__game');
         this.wall = document.getElementById('wallCheck');
         this.scoreValue = document.getElementById('scoreResult');
+        // this.totalScoreValue = document.getElementById('content__header-intro-tcs'); //only when pause is active
         this.highscore = document.getElementById('highscoreResult');
+        this.totalHighscore = document.getElementById('content__header-intro-ths');
         this.difficulty = document.getElementById('difficultyDegreeValue');
         this.input = document.getElementById('range');
         this.pause = document.getElementById('content__game-pause');
-
-        this.balls = [
-            {x:50, y:50},
-            {x:100, y:50},
-            {x:150, y:50}
-        ];
-        this.lastBall = [];
 
         this.foodFirstPoint = 50;
         this.foodSecondPoint = 100;
@@ -50,13 +56,12 @@ class Snake {
         this.snakeFoodyOne = this.foodSecondPoint + this.foody;
         this.snakeFoodyTwo = this.foodFirstPoint + this.foody;	
 
-        
-
         this.input.addEventListener('mousemove', () => this.rangeSlider(this.input.value));
         this.input.addEventListener('change', () => this.rangeSlider(this.input.value));
         this.input.addEventListener('change', () => this.rangeSliderReset());
 
-        document.getElementById('startBtn').addEventListener('click', () => this.startGame());
+        document.getElementById('startBtn').addEventListener('click', () => this.startSingleplayer());
+        document.getElementById('multiplayer').addEventListener('click', () => this.startMultiplayer());
         this.wall.addEventListener('click', () => this.changeWall());
 
         document.addEventListener('keydown', (e) => {
@@ -79,7 +84,22 @@ class Snake {
             if(this.keyCode == 32) {
                 this.pauseGame();
             }
-        }); 
+            //only when multiplayer is active
+            if(this.multiplayer == true) {
+                if(this.keyCode == 65 && this.keyPL2 != 'rightPL2'){
+                    this.keyPL2 = 'leftPL2';
+                } 
+                if(this.keyCode == 87 && this.keyPL2 != 'downPL2'){
+                    this.keyPL2 = 'upPL2';
+                }
+                if(this.keyCode == 68 && this.keyPL2 != 'leftPL2'){
+                    this.keyPL2 = 'rightPL2';
+                }
+                if(this.keyCode == 83 && this.keyPL2 != 'upPL2'){
+                    this.keyPL2 = 'downPL2';
+                }
+            }
+        });
     }
 
     startGame() {
@@ -95,6 +115,16 @@ class Snake {
             this.closeMenuToggle();
             this.startClicked = true;
         }
+    }
+
+    startSingleplayer() {
+        this.multiplayer = false;
+        this.startGame();
+    }
+
+    startMultiplayer() {
+        this.multiplayer = true;
+        this.startGame();
     }
 
     resetGame() {
@@ -130,7 +160,6 @@ class Snake {
             } else {
                 this.counter = false;
                 this.resumeGame();
-                this.pause.style.display = 'none';
             }
         }
     }
@@ -140,6 +169,7 @@ class Snake {
             this.running = true;
             this.generateSnake();
             this.closeMenuToggle();
+            this.pause.style.display = 'none';
         }
     }
 
@@ -147,10 +177,19 @@ class Snake {
         this.key = 'right';
         this.score = 0;
         this.balls = [
-            {x:50, y:50},
-            {x:100, y:50},
-            {x:150, y:50}
+            {x:0, y:50},
+            {x:50, y:50}, 
+            {x:100, y:50}
         ];
+        if (this.multiplayer == true) {
+            this.keyPL2 = 'leftPL2';
+            this.scorePL2 = 0;
+            this.ballsPL2 = [
+                {x:1800, y:800},   
+                {x:1750, y:800},
+                {x:1700, y:800}
+            ];
+        }
         this.createFood();
     }
     
@@ -185,6 +224,21 @@ class Snake {
         if(this.key == 'up'){
             this.balls.push({x:this.lastBall.x, y:this.lastBall.y - 50});
         }
+        if (this.multiplayer == true) {
+            this.lastBallPL2 = this.ballsPL2[this.ballsPL2.length - 1];
+            if(this.keyPL2 == 'rightPL2'){
+                this.ballsPL2.push({x:this.lastBallPL2.x + 50, y:this.lastBallPL2.y});
+            }
+            if(this.keyPL2 == 'downPL2'){
+                this.ballsPL2.push({x:this.lastBallPL2.x, y:this.lastBallPL2.y + 50});
+            }
+            if(this.keyPL2 == 'leftPL2'){
+                this.ballsPL2.push({x:this.lastBallPL2.x - 50, y:this.lastBallPL2.y});
+            }
+            if(this.keyPL2 == 'upPL2'){
+                this.ballsPL2.push({x:this.lastBallPL2.x, y:this.lastBallPL2.y - 50});
+            }
+        }
     }
 
     generateSnake() {
@@ -192,6 +246,9 @@ class Snake {
             this.speedSetting = setInterval(() => {
                 this.ctx.clearRect(0, 0, 1850, 900);
                 this.balls.shift(); //delete the last ball
+                if (this.multiplayer == true) {
+                    this.ballsPL2.shift();
+                }
                 this.add();	
                 this.lastBall = this.balls[this.balls.length - 1];
 
@@ -201,11 +258,21 @@ class Snake {
                     this.add();
                     this.createFood();
                 }
+                if (this.multiplayer == true) {
+                    this.lastBallPL2 = this.ballsPL2[this.ballsPL2.length - 1];
+
+                    if(this.lastBallPL2.x == this.snakeFoodxOne && this.lastBallPL2.y == this.snakeFoodyTwo){
+                        this.scorePL2 += 5;
+                        this.scoreValuePL2.innerHTML = this.scorePL2;
+                        this.add();
+                        this.createFood();
+                    }
+                }
 
                 for(var i = 0; i < this.balls.length; i++){
                     this.ball = this.balls[i];
 
-                    if(i == this.balls.length - 1){
+                    if(i == this.balls.length -1){
                         this.ctx.fillStyle = "maroon";
                     } else{
                         this.ctx.fillStyle = "green";
@@ -225,13 +292,13 @@ class Snake {
                             this.ball.y = 900;
                         }
                     } else {
-                        if(this.ball.x > 1850){
+                        if(this.ball.x > 1800){
                             this.scores();
                         }
                         if(this.ball.x < 0){
                             this.scores();
                         }
-                        if(this.ball.y > 900){
+                        if(this.ball.y > 850){
                             this.scores();
                         }
                         if(this.ball.y < 0){
@@ -240,28 +307,92 @@ class Snake {
                     }
 
                     if(this.ball.x == this.lastBall.x && this.ball.y == this.lastBall.y && i < this.balls.length - 2){
-                        alert("Game Over! Your Score Is: " + this.score);
+                        this.scores();
                         this.init();
                     }
                     if (this.start == true) {
                         this.ctx.fillRect(this.ball.x, this.ball.y, 49, 49);
                     }
                 }
+
+                if (this.multiplayer == true) {
+                    for(var i = 0; i < this.ballsPL2.length; i++){
+                        this.ballPL2 = this.ballsPL2[i];
+
+                        if(i == this.ballsPL2.length - 1){
+                            this.ctx.fillStyle = "lightblue";
+                        } else{
+                            this.ctx.fillStyle = "green";
+                        }
+                        
+                        if (document.getElementById('wallResult').innerHTML == 'An') {
+                            if(this.ballPL2.x > 1850){
+                                this.ballPL2.x = 0;
+                            }
+                            if(this.ballPL2.x < 0){
+                                this.ballPL2.x = 1850;
+                            }
+                            if(this.ballPL2.y > 900){
+                                this.ballPL2.y = 0;
+                            }
+                            if(this.ballPL2.y < 0){
+                                this.ballPL2.y = 900;
+                            }
+                        } else {
+                            if(this.ballPL2.x > 1850){
+                                this.scores();
+                            }
+                            if(this.ballPL2.x < 0){
+                                this.scores();
+                            }
+                            if(this.ballPL2.y > 900){
+                                this.scores();
+                            }
+                            if(this.ballPL2.y < 0){
+                                this.scores();
+                            }
+                        }
+
+                        if(this.ballPL2.x == this.lastBallPL2.x && this.ballPL2.y == this.lastBallPL2.y && i < this.ballsPL2.length - 2){
+                            this.scores();
+                            this.init();
+                        }
+                        if (this.start == true) {
+                            this.ctx.fillRect(this.ballPL2.x, this.ballPL2.y, 49, 49);
+                        }
+                    }
+                }
+
                 if (this.start == true) {
                     this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 49, 49);
-                }
+                    this.ctx.fillStyle = "#DF7401";
+                    this.ctx.fill();
+                } 
                 
             }, this.speed);
         }
     }
 
-    scores() {
+    scores() { ///muss geändert werden
         alert("Game Over! Your Score Is: " + this.score);
         this.scoreValue.innerHTML = 0;
         if (this.score > this.highscore.textContent) {
             this.highscore.innerHTML = this.score;
         }
+        if (this.score > this.totalHighscore.textContent) {
+            this.totalHighscore.innerHTML = this.score;
+        }
+        if (multiplayer == true) {
+            this.scoreValuePL2.innerHTML = 0;
+            if (this.scorePL2 > this.highscorePL2.textContent) {
+                this.highscorePL2.innerHTML = this.scorePL2;
+            }
+            if (this.scorePL2 > this.totalHighscore.textContent) {
+                this.totalHighscore.innerHTML = this.scorePL2;
+            }
+        }
         this.init();
+        
     }
     
     rangeSlider(value) {

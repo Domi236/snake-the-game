@@ -14,9 +14,9 @@
 	<div id="content__header-wrapper" class="content__header-wrapper">
 		<ul id="content__header-menu" class="content__header-menu">
 			<li id="startBtn" class="content__header-menu-toggle">Singleplayer</li>
-			<li class="content__header-menu-toggle">Multiplayer</li>
+			<li id="multiplayer" class="content__header-menu-toggle">Multiplayer</li>
 			<li id="difficulty" class="content__header-menu-toggle"><span id="difficultyDegreeValue">Normal:</span><br/>
-				<span class="results" id="rangeValue">200</span>
+				<span class="resultInt" id="rangeValue">200</span>
 				<input class="range" id="range" type="range" value="200" min="100" max="500"  step="10">
 			</li>
 			<li id="wallHit" class="content__header-menu-toggle">Walls: 
@@ -25,8 +25,31 @@
 			<li class="content__header-menu-toggle">Items</li>  <!--available which items drop, dropchance, when item should drop etc.-->
 			<li class="content__header-menu-toggle">Controls</li> <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
 			<li class="content__header-menu-toggle">Options</li> <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
-			<li class="content__header-menu-toggle">Score: <span id="scoreResult" class="results">0</span></li>
-			<li class="content__header-menu-toggle">Highscore: <span id="highscoreResult" class="results">0</span></li>
+			<li class="content__header-menu-toggle">Current Score: <span class="results">Pl1
+				<span id="scoreResult" class="resultInt">0</span><br/>
+				</span>
+				<span class="results">Pl2
+					<span id="scoreResultPL2" class="resultInt">0</span>
+				</span>
+				<span class="results">Pl3
+					<span id="scoreResultPl3" class="resultInt">0</span>
+				</span>
+				<span class="results">Pl4
+					<span id="scoreResultPL4" class="resultInt">0</span>
+				</span></li>
+			<li class="content__header-menu-toggle">Highscore: <span class="results">Pl1
+					<span id="highscoreResult" class="resultInt">0</span><br/>
+			 	</span>
+				<span class="results">Pl2
+					<span id="highscoreResultPL2" class="resultInt">0</span>
+				</span>
+				<span class="results">Pl3
+					<span id="highscoreResultPl3" class="resultInt">0</span>
+				</span>
+				<span class="results">Pl4
+					<span id="highscoreResultPL4" class="resultInt">0</span>
+				</span>
+			</li>
 		</ul>
 		<img class="content__header-menu-images" id="goBack" src="assets/images/back.png"/>
 		<img class="content__header-menu-images" id="snake" src="assets/images/snake.jpg"/>
@@ -41,6 +64,10 @@
 	<div id="content__header-intro-container" class="content__header-intro-container">
 		<h1 class="content__header-intro-headline">SNAKE THE<br/> GAME</h1>
 		<img class="content__header-intro-image" src="assets/images/snake-the-game.jpg"/>
+		<div class="content__header-intro-scores-container">
+			<!-- <h3 id="content__header-intro-tcs" class="content__header-intro-scores">TCS(Total Current Score):</h3> -->
+			<h3  class="content__header-intro-scores">THS(Total Highscore): <span id="content__header-intro-ths">0</span></h3>
+		</div>
 	</div>
 	
 </section>
