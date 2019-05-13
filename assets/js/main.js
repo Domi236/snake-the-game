@@ -2,6 +2,7 @@
 
 class Snake {
     constructor(config) {
+        console.log(this.speed);
         this.speed = typeof this.speed !== 'undefined' ? this.speed: 200;
 
         //only when multiplayer is active
@@ -29,6 +30,7 @@ class Snake {
         this.running = false
         this.moveSnake = false;
         this.counter = false;
+        this.food == 'none';
         
         this.menu = document.getElementById('content__header-wrapper');
         this.intro = document.getElementById('content__header-intro-container');
@@ -211,6 +213,41 @@ class Snake {
     }
 
     add(){
+        if (this.food == 'PL1') {
+            this.lastBall = this.balls[this.balls.length - 1];
+            if(this.key == 'right'){
+                this.balls.push({x:this.lastBall.x + 50, y:this.lastBall.y});
+            }
+            if(this.key == 'down'){
+                this.balls.push({x:this.lastBall.x, y:this.lastBall.y + 50});
+            }
+            if(this.key == 'left'){
+                this.balls.push({x:this.lastBall.x - 50, y:this.lastBall.y});
+            }
+            if(this.key == 'up'){
+                this.balls.push({x:this.lastBall.x, y:this.lastBall.y - 50});
+            }
+        }
+        if (this.multiplayer == true) {
+            if (this.food == 'PL2') {
+                this.lastBallPL2 = this.ballsPL2[this.ballsPL2.length - 1];
+                if(this.keyPL2 == 'rightPL2'){
+                    this.ballsPL2.push({x:this.lastBallPL2.x + 50, y:this.lastBallPL2.y});
+                }
+                if(this.keyPL2 == 'downPL2'){
+                    this.ballsPL2.push({x:this.lastBallPL2.x, y:this.lastBallPL2.y + 50});
+                }
+                if(this.keyPL2 == 'leftPL2'){
+                    this.ballsPL2.push({x:this.lastBallPL2.x - 50, y:this.lastBallPL2.y});
+                }
+                if(this.keyPL2 == 'upPL2'){
+                    this.ballsPL2.push({x:this.lastBallPL2.x, y:this.lastBallPL2.y - 50});
+                }
+            }
+        }
+    }
+
+    addEachTime(){
         this.lastBall = this.balls[this.balls.length - 1];
         if(this.key == 'right'){
             this.balls.push({x:this.lastBall.x + 50, y:this.lastBall.y});
@@ -243,18 +280,20 @@ class Snake {
 
     generateSnake() {
         if (this.moveSnake == true) {
+            console.log(this.speed);
             this.speedSetting = setInterval(() => {
                 this.ctx.clearRect(0, 0, 1850, 900);
                 this.balls.shift(); //delete the last ball
                 if (this.multiplayer == true) {
                     this.ballsPL2.shift();
                 }
-                this.add();	
+                this.addEachTime();	
                 this.lastBall = this.balls[this.balls.length - 1];
 
                 if(this.lastBall.x == this.snakeFoodxOne && this.lastBall.y == this.snakeFoodyTwo){
                     this.score += 5;
                     this.scoreValue.innerHTML = this.score;
+                    this.food = 'PL1';
                     this.add();
                     this.createFood();
                 }
@@ -264,6 +303,7 @@ class Snake {
                     if(this.lastBallPL2.x == this.snakeFoodxOne && this.lastBallPL2.y == this.snakeFoodyTwo){
                         this.scorePL2 += 5;
                         this.scoreValuePL2.innerHTML = this.scorePL2;
+                        this.food = 'PL2';
                         this.add();
                         this.createFood();
                     }
@@ -310,6 +350,13 @@ class Snake {
                         this.scores();
                         this.init();
                     }
+                    if (this.multiplayer == true) {
+                        if(this.ball.x == this.lastBallPL2.x && this.ball.y == this.lastBallPL2.y && i < this.ballsPL2.length){
+                            this.scores();
+                            this.init();
+                        }
+                    }
+                   
                     if (this.start == true) {
                         this.ctx.fillRect(this.ball.x, this.ball.y, 49, 49);
                     }
@@ -357,6 +404,10 @@ class Snake {
                             this.scores();
                             this.init();
                         }
+                        if(this.ballPL2.x == this.lastBall.x && this.ballPL2.y == this.lastBall.y && i < this.balls.length){
+                            this.scores();
+                            this.init();
+                        }
                         if (this.start == true) {
                             this.ctx.fillRect(this.ballPL2.x, this.ballPL2.y, 49, 49);
                         }
@@ -398,6 +449,7 @@ class Snake {
     rangeSlider(value) {
         document.getElementById('rangeValue').innerHTML = value;
         this.speed = value;
+        console.log(this.speed);
         if(this.speed < 200) {
             this.difficulty.innerHTML = 'Master:';
         }
