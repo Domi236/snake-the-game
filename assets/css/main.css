@@ -22,7 +22,33 @@ html {
     transform: translateX(-50%);
     font-size: 100px;
 }
-
+#content__game-game-over-drawn {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    transform: translateX(-50%);
+    font-size: 100px;
+}
+#content__game-game-over-wrapper {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 25%;
+    transform: translateX(-50%);
+}
+#content__game-game-over-container {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+#content__game-winner-first {
+    font-size: 50px;
+}
+.content__game-winner {
+    margin: 10px;
+    text-align: center;
+}
 /*         menu          */
 /*//////////////////////////*/
 

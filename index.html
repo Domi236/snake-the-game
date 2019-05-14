@@ -32,7 +32,7 @@
 					<span id="scoreResultPL2" class="resultInt">0</span>
 				</span>
 				<span class="results">Pl3
-					<span id="scoreResultPl3" class="resultInt">0</span>
+					<span id="scoreResultPL3" class="resultInt">0</span>
 				</span>
 				<span class="results">Pl4
 					<span id="scoreResultPL4" class="resultInt">0</span>
@@ -44,7 +44,7 @@
 					<span id="highscoreResultPL2" class="resultInt">0</span>
 				</span>
 				<span class="results">Pl3
-					<span id="highscoreResultPl3" class="resultInt">0</span>
+					<span id="highscoreResultPL3" class="resultInt">0</span>
 				</span>
 				<span class="results">Pl4
 					<span id="highscoreResultPL4" class="resultInt">0</span>
@@ -69,7 +69,6 @@
 			<h3  class="content__header-intro-scores">THS(Total Highscore): <span id="content__header-intro-ths">0</span></h3>
 		</div>
 	</div>
-	
 </section>
 
 <section class="content__game" id="content__game">
@@ -77,6 +76,13 @@
 		<canvas id="canvas" width="1850" height="900"></canvas>
 	</div>
 	<h2 id="content__game-pause">PAUSE</h2>
+	<h2 id="content__game-game-over-drawn">DRAWN</h2>
+	<div id="content__game-game-over-wrapper">
+		<div id="content__game-game-over-container">
+			<h2 id="content__game-winner-first" class="content__game-winner"></h2>
+		</div>
+	</div>
+	
 </section>
 <script src="assets/js/main.js"></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
 Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.
