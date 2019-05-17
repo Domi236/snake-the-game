@@ -641,6 +641,14 @@ this.objPlayer = {
     multiplayerPL3: true,
     multiplayerPL4: true
 };
+this.objPlayer = {
+    player1: true,
+    player2: false,
+    player3: true,
+    player4: true
+};
+
+
 
 this.objPlayerCountDeath = {
     player1: 0,
@@ -693,4 +701,253 @@ this.objKey = {
     keyPL2: 'leftPL2',
     keyPL3: 'rightPL3',
     keyPL4: 'leftPL4'
+}
+
+class Snake {
+    constructor() {
+        this.controls = [];
+        this.players = [];
+        this.startingPoints = [{
+            x: 0,
+            y: 50
+        },{
+            x: 1800,
+            y: 100
+        },{
+            x: 0,
+            y: 800
+        },{
+            x: 1800,
+            y: 750
+        }]
+        this.addControls(0, 38, 40, 37, 39);
+        this.addPlayer(0);
+        this.onKeyDown = this.onKeyDown.bind(this);
+
+        document.addEventListener('keydown', this.onKeyDown);
+    }
+
+    onKeyDown(e) {
+        let players = this.player.map((player, id) => {
+            if (!player.active || player.dead){
+                return;
+            }
+            Object.keys(player.controls).map(possibleDirection => {
+                if (e.keyCode !== player.controls[possibleDirection]) {
+                    return;
+                }
+                if (Snake.getAxisBy(player.direction) === Snake.getAxisBy(possibleDirection)) {
+                    return;
+                }
+                this.player[id].direction = possibleDirection;
+            });
+        });
+           
+        if(this.keyCode == 27) {
+            this.stopGame();
+            this.input.style.display = "block";
+        }
+        if(this.keyCode == 32) {
+            this.pauseGame();
+        }
+    }
+
+    static getAxisBy(direction) {
+        return direction === 'left' || direction === 'right' ? 'x' : 'y';
+    }
+    
+    addControls(id, up, down, left, right) {
+        this.controls.push({
+            up,
+            down,
+            left,
+            right
+        })
+    }
+
+    addPlayer(id, color = 'green') {
+        this.players[id] = {
+            active: true,
+            dead: false,
+            color,
+            score: 0,
+            highscore: 0,
+            balls: [],
+            direction: '',
+            controls: this.controls[id]
+        }
+    }
+
+    initPlayer(id) {
+        this.players[id].direction = id % 2 ? 'left' : 'right';
+        this.players[id].score = 0;
+        this.players[id].balls = [];
+        this.players[id].dead = false;
+        for (let i = 0; i < 3; ++i){
+            let ball = Object.assign({}, this.startingPoints[id]);
+            ball.x += 50 * (id % 2 ? -1 : 1);
+            this.players[id].balls.push(ball);
+        }
+    }
+
+    init() {
+        this.players.map((player, id) => {
+            this.initPlayer(id)
+        });
+        this.createFood();
+    }
+
+    addBallToPlayer(id) {
+        let newBall = this.players[id].balls.slice(-1).pop();
+        switch (this.players[id].direction) {
+            case "up":
+                newBall.y -= 50;
+                break;
+            case "down":
+                newBall.y += 50;
+                break;
+            case "left":
+                newBall.x -= 50;
+                break;
+            case "right":
+                newBall.x += 50;
+                break;
+        }
+        this.players[id].push(newBall);
+    }
+
+    changePlayerHead(id) {
+        this.players[id].balls.shift();
+        this.addBallToPlayer(id);
+        return this.players[id].balls.slice(-1).pop();
+    }
+
+    painter() {
+        if (!this.moveSnake) {
+            return;
+        }
+        
+        this.ctx.clearRect(0, 0, 1850, 900);
+        this.players.map((player, id) => {
+            if (!player.active || player.dead){
+                return;
+            }
+            let snakeHead = this.changePlayerHead(id);
+            if(snakeHead.x == this.snakeFoodxOne && snakeHead.y == this.snakeFoodyTwo){
+                this.players[id].score += 5;
+                this.objScoreValue[SV].innerHTML = this.players[id].score;
+                this.addBallToPlayer(id);
+                this.createFood();
+            }
+            this.checkPlayerCollision(id, 'wall');
+            this.checkPlayerCollision(id, 'self');
+            this.checkPlayerCollision(id, 'others');
+            this.paint('snake', id);
+        });
+        this.paint('food');
+        this.isAnyPlayerAlive();
+    }
+
+    paint(type, id = false) {
+        if (!this.start)  {
+            return;
+        }
+        switch(type) {
+            case "snake":
+                this.players[id].balls.map((ball, ballIndex) => {
+                    this.ctx.fillRect(ball.x, ball.y, 49, 49);
+                    this.ctx.fillStyle = ballIndex === this.players[id].balls.length -1 ? "maroon" : this.players[id].color;
+                    this.ctx.fill();
+                })
+                break;
+            case "food":
+                this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 49, 49);
+                this.ctx.fillStyle = "#DF7401";
+                this.ctx.fill();
+                break;
+        }
+    }
+    static maybeWalkThroughWalls(ball) {
+        let maxX = 1850,
+        maxY = 900;
+        if (ball.x > maxX) {
+            ball.x = 0
+        }
+        if (ball.x < 0) {
+            ball.x = maxX
+        }
+        if (ball.y > maxY) {
+            ball.y = 0
+        }
+        if (ball.y < 0) {
+            ball.y = maxY
+        }
+        return ball;
+    }
+    static checkWallCollision(ball) {
+        let maxX = 1800,
+        maxY = 850;
+        
+        if (ball.x > maxX || ball.x < 0 || ball.y > maxY || ball.y < 0) {
+            return true;
+        }
+        return false;
+    }
+    checkSnakeHeadCollisionForPlayer(id, balls) {
+        let snakeHead =  this.players[id].balls.slice(-1).pop();
+        balls.map(ball => {
+            if (ball.x !== snakeHead.x || ball.y !== snakeHead.y) {
+                return;
+            }
+            this.players[id].dead = 1;
+        })
+    }
+    checkPlayerCollision (id, type) {
+        let player =  this.players[id];
+        let balls = player.balls.slice(0);
+        switch(type) {
+            case "wall":
+                player.balls.map((ball, ballId) => {
+                    if (this.wall.checked) {
+                        this.players[id].balls[ballId] = Snake.maybeWalkThroughWalls(ball);
+                        return;
+                    } 
+                    if (Snake.checkWallCollision(ball)) {
+                        this.players[id].dead = true; //1
+                    }
+                })
+            case "others":
+                let allBalls = this.players.reduce((balls, player) => {
+                    if (player.active && !player.dead) {
+                        return balls.concat(player.balls);
+                    }
+                    return balls;
+                }, [])
+                this.checkSnakeHeadCollisionForPlayer(id, allBalls);
+            default: {
+                // Pop Head from Balls to prevent sudden death
+                balls.pop();
+                this.checkSnakeHeadCollisionForPlayer(id, balls);
+            }
+        }
+    }
+    getPlayerCount () {
+        return this.players.reduce((acc, player) => acc + (player.active ? 1 : 0), 0)
+    }
+    isAnyPlayerAlive() {
+        let isAlive = !this.players.reduce((acc, player) => player.dead === false, false);
+        if (isAlive) {
+            return;
+        }
+        this.alertResult(); //look for singleplayer, come into singleplayerGameOver()?
+        if (getPlayerCount() === 1) {
+            this.singleplayerGameOver();
+        }
+    }
+    singleplayerGameOver() {
+        this.death = 0; //needed?
+        this.input.style.display = "block";
+        this.init();
+        this.stopGame();
+    }
 }
