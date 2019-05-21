@@ -1,34 +1,33 @@
 
-
 class Snake {
     constructor() {
         this.speed = typeof this.speed !== 'undefined' ? this.speed: 200;
 
         this.drawn = document.getElementById('content__game-game-over-drawn');
-        this.objScoreValue = {
-            scoreValue: document.getElementById('scoreResult'),
-            scoreValuePL2: document.getElementById('scoreResultPL2'),
-            scoreValuePL3: document.getElementById('scoreResultPL3'),
-            scoreValuePL4: document.getElementById('scoreResultPL4')
-        };
+        this.objScoreValue = [
+            document.getElementById('scoreResult'),
+            document.getElementById('scoreResultPL2'),
+            document.getElementById('scoreResultPL3'),
+            document.getElementById('scoreResultPL4')
+        ];
 
-        this.objHScore = {
-            highscore: document.getElementById('highscoreResult'),
-            highscorePL2: document.getElementById('highscoreResultPL2'),
-            highscorePL3: document.getElementById('highscoreResultPL3'),
-            highscorePL4: document.getElementById('highscoreResultPL4')
-        };
+        this.objHScore = [
+            document.getElementById('highscoreResult'),
+            document.getElementById('highscoreResultPL2'),
+            document.getElementById('highscoreResultPL3'),
+            document.getElementById('highscoreResultPL4')
+        ];
        
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.start = false;
         this.startClicked = false;
-        this.running = false
+        this.running = false;
         this.moveSnake = false;
         this.counter = false;
         this.gameOver = false;
         this.arrayScore = [];
-        
+
         this.menu = document.getElementById('content__header-wrapper');
         this.intro = document.getElementById('content__header-intro-container');
         this.game = document.getElementById('content__game');
@@ -66,7 +65,7 @@ class Snake {
         this.controls = [];
         this.players = [];
         this.startingPoints = [{
-            x: 0, //you should set all balls in x -50 because initPlayer() set all to + 50;
+            x: 0, 
             y: 50
         },{
             x: 1800,
@@ -78,6 +77,7 @@ class Snake {
             x: 1800,
             y: 750
         }]
+        
         this.addControls(0, 38, 40, 37, 39);
         this.addPlayer(0);
         this.onKeyDown = this.onKeyDown.bind(this);
@@ -88,9 +88,6 @@ class Snake {
     onKeyDown(e) {
         let player = this.players.map((player, id) => {
             if (!player.active || player.dead){
-                console.log('dead');
-                console.log(player.active);
-                console.log(player.dead);
                 return;
             }
             Object.keys(player.controls).map(possibleDirection => {
@@ -100,7 +97,7 @@ class Snake {
                 if (Snake.getAxisBy(player.direction) === Snake.getAxisBy(possibleDirection)) {
                     return;
                 }
-                this.player[id].direction = possibleDirection;
+                this.players[id].direction = possibleDirection;
             });
         });
            
@@ -120,12 +117,12 @@ class Snake {
     }
     
     addControls(id, up, down, left, right) {
-        this.controls.push({
+        this.controls[id] = {
             up,
             down,
             left,
             right
-        })
+        };
     }
     
     addPlayer(id, color = 'green') {
@@ -142,31 +139,29 @@ class Snake {
 
     initPlayer(id) {
         this.players[id].direction = id % 2 ? 'left' : 'right';
-        this.players[id].score = 0;
-        this.players[id].balls = [];    
+        this.players[id].score = 0;   
         this.players[id].dead = false;
-        // this.players[id].active = false; ///7 ? ?
+        this.players[id].active = true;
         let ball = {
             x: this.startingPoints[id].x,
             y: this.startingPoints[id].y
         }
-        let newBalls = [];
+        this.players[id].balls = [];
         
-        newBalls.push(ball);
-        for (let i = 0; i < 2; ++i){
-            ball = Object.assign({}, ball); // ball = JSON.parse(JSON.stringify(ball));
-            
-            ball.x += 50 * (id % 2 ? -1 : 1);
-            newBalls.push(ball);
+        for (let i = 0; i <3; ++i){
+            this.players[id].balls[i] = {
+                x: ball.x,
+                y: ball.y
+            }
+            this.players[id].balls[i].x += 50 * (id % 2 ? -1 : 1) * i;
         }
-        this.players[id].balls = Object.assign({}, newBalls);
     }
 
     startGame() {
         if (this.startClicked == true) {
             this.resetGame();
         }
-        if (this.start == false) {
+        if (this.start === false) {
             this.running = true;
             this.start = true;
             this.moveSnake = true;
@@ -190,7 +185,7 @@ class Snake {
     }
 
     resetGame() {
-        if (this.start == true) {
+        if (this.start === true) {
             this.start = false;
             this.painter();
             clearInterval(this.speedSetting);	
@@ -199,6 +194,8 @@ class Snake {
     }
 
     stopGame() {
+        this.moveSnake = false;
+        clearInterval(this.speedSetting);
         if (this.startClicked == true) {
             if (this.running == true) {
                 this.running = false;
@@ -257,18 +254,11 @@ class Snake {
         this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
         this.snakeFoodyOne = this.foodSecondPoint + this.foody;
         this.snakeFoodyTwo = this.foodFirstPoint + this.foody;
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.snakeFoodxOne, this.snakeFoodyTwo);
-        this.ctx.lineTo(this.snakeFoodxTwo, this.snakeFoodyTwo);
-        this.ctx.lineTo(this.snakeFoodxTwo, this.snakeFoodyOne);
-        this.ctx.lineTo(this.snakeFoodxOne, this.snakeFoodyOne);
-        this.ctx.closePath();
     }
 
     addBallToPlayer(id) {
-        let newBall = this.players[id].balls.slice(-1).pop();
-
+        let newBall = JSON.parse(JSON.stringify(this.players[id].balls)).pop();
+        
         switch (this.players[id].direction) {
             case "up":
                 newBall.y -= 50;
@@ -283,15 +273,12 @@ class Snake {
                 newBall.x += 50;
                 break;
         }
-        this.players[id].balls.push(newBall); //.balls was missing
-        // console.log(this.players[id].balls);
+        this.players[id].balls.push(newBall);
     }
 
     changePlayerHead(id) {
-        this.players[id].balls = Object.values(this.players[id].balls); //changes the object in an array
-        this.players[id].balls.shift();
-  
         this.addBallToPlayer(id);
+        this.players[id].balls.shift();
         return this.players[id].balls.slice(-1).pop();
     }
 
@@ -299,21 +286,22 @@ class Snake {
         if (!this.moveSnake) {
             return;
         }
-        console.log(this.speed);
         this.speedSetting = setInterval(() => {
         
             this.ctx.clearRect(0, 0, 1850, 900);
-            this.players.map((player, id, scoreValue) => {
-                // if (!player.active || player.dead){
-                //     console.log('paint');
-                //     console.log(player.active);
-                //     console.log(player.dead);
-                //     return;
-                // }
+            console.log(this.players);
+
+            this.players.map((player, id) => {
+                console.log(player);
+                if (!player.active || player.dead){
+                    return;
+                }
+            
                 let snakeHead = this.changePlayerHead(id);
                 if(snakeHead.x == this.snakeFoodxOne && snakeHead.y == this.snakeFoodyTwo){
+                    console.log('found food for player '+id)
                     this.players[id].score += 5;
-                    this.objScoreValue[scoreValue].innerHTML = this.players[id].score;
+                    this.objScoreValue[id].innerHTML = this.players[id].score;
                     this.addBallToPlayer(id);
                     this.createFood();
                 }
@@ -322,37 +310,32 @@ class Snake {
                 this.checkPlayerCollision(id, 'others');
                 this.paint('snake', id);
             });
-            
             this.paint('food');
+        
             this.isAnyPlayerAlive();
         }, this.speed);
     }
 
     paint(type, id = false) {
         if (!this.start)  {
-            console.log('start');
             return;
         }
-        switch(type) {
-            case "snake":
-            console.log('snake');
-                this.players[id].balls.map((ball, ballIndex) => {
-                    this.ctx.fillRect(ball.x, ball.y, 49, 49);
-                    this.ctx.fillStyle = ballIndex === this.players[id].balls.length -1 ? "maroon" : this.players[id].color;
-                    this.ctx.fill();
-                })
-                break;
-            case "food":
-            console.log('food');
-                this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 49, 49);
-                this.ctx.fillStyle = "#DF7401";
-                this.ctx.fill();
-                break;
+
+        if (type === "snake") {
+            this.players[id].balls.map((ball, ballIndex) => {
+                this.ctx.fillStyle = ballIndex === this.players[id].balls.length - 1 ? "maroon" : this.players[id].color;
+                this.ctx.fillRect(ball.x, ball.y, 48, 48);
+            })
+        }
+
+        if (type === "food") {
+            this.ctx.fillStyle = "#DF7401";
+            this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 48, 48);
         }
     }
     static maybeWalkThroughWalls(ball) {
-        let maxX = 1850,
-        maxY = 900;
+        let maxX = 1800,
+        maxY = 850;
         // console.log(ball);
         if (ball.x > maxX) {
             ball.x = 0
@@ -383,7 +366,7 @@ class Snake {
             if (ball.x !== snakeHead.x || ball.y !== snakeHead.y) {
                 return;
             }
-            this.players[id].dead = 1;
+            this.players[id].dead = true;
         })
     }
     checkPlayerCollision (id, type) {
@@ -401,8 +384,8 @@ class Snake {
                     }
                 })
             case "others":
-                let allBalls = this.players.reduce((balls, player) => {
-                    if (player.active && !player.dead) {
+                let allBalls = this.players.reduce((balls, player, playerId) => {
+                    if (player.active && !player.dead && playerId !== id) {
                         console.log('others dead');
                         console.log(player.active);
                         console.log(player.dead);
@@ -424,7 +407,7 @@ class Snake {
     }
 
     isAnyPlayerAlive() {
-        let isAlive = !this.players.reduce((acc, player) => player.dead === false, false);
+        let isAlive = this.players.reduce((acc, player) => player.dead === false, false);
         if (isAlive) {
             return;
         }
