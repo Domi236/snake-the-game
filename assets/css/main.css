@@ -75,9 +75,6 @@ html {
     padding: 10px;
     text-shadow: 8px 5px 5px rgb(187, 107, 61, 0.4);
 }
-.content__header-menu-toggle:hover {
-    text-decoration: underline;
-}
 
 .content__header-menu-images {
     position: absolute;
@@ -109,10 +106,6 @@ html {
     width: 70px;
     left: 250px;
     top: 52.5%;
-}
-
-#difficulty, #wallHit {
-    text-decoration: none;
 }
 #playerRange {
     position: absolute;

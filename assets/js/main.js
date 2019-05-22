@@ -291,8 +291,8 @@ class Snake {
         if (!this.moveSnake) {
             return;
         }
+
         this.speedSetting = setInterval(() => {
-        
             this.ctx.clearRect(0, 0, 1850, 900);
 
             this.players.map((player, id) => {
@@ -342,6 +342,7 @@ class Snake {
             this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 48, 48);
         }
     }
+
     static maybeWalkThroughWalls(ball) {
         let maxX = 1800,
         maxY = 850;
@@ -359,6 +360,7 @@ class Snake {
         }
         return ball;
     }
+
     static checkWallCollision(ball) {
         let maxX = 1800,
         maxY = 850;
@@ -368,6 +370,7 @@ class Snake {
         }
         return false;
     }
+
     checkSnakeHeadCollisionForPlayer(id, balls) {
         let snakeHead =  this.players[id].balls.slice(-1).pop();
         balls.map(ball => {
@@ -377,6 +380,7 @@ class Snake {
             this.players[id].dead = true;
         })
     }
+
     checkPlayerCollision (id, type) {
         let player =  this.players[id];
         let balls = player.balls.slice(0);
@@ -405,7 +409,7 @@ class Snake {
                 this.checkSnakeHeadCollisionForPlayer(id, balls);
             }
         }
-    }
+    } 
 
     getPlayerCount() {
         return this.players.reduce((acc, player) => acc + (player.active ? 1 : 0), 0)
@@ -416,7 +420,6 @@ class Snake {
         if (isAlive) {
             return;
         }
-        
         this.alertResult();
         if (this.getPlayerCount() === 1) {
             this.singleplayerGameOver();
@@ -425,16 +428,15 @@ class Snake {
     
     singleplayerGameOver() {
         this.gameOver = false;
-        this.startGame();
-        this.stopGame();
     }
 
     alertResult() {
-        this.gameOver = true;
         this.objScoreValue[0].innerHTML = 0;
         this.objScoreValue[1].innerHTML = 0;
         this.objScoreValue[2].innerHTML = 0;
         this.objScoreValue[3].innerHTML = 0;
+        this.stopGame();
+        this.gameOver = true;
     }
 
     rangeSlider(value) {
