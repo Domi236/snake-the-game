@@ -26,7 +26,8 @@ class Snake {
         this.moveSnake = false;
         // this.counter = false;
         this.gameOver = false;
-        
+        this.arrayScore = [];
+
         this.menu = document.getElementById('content__header-wrapper');
         this.intro = document.getElementById('content__header-intro-container');
         this.game = document.getElementById('content__game');
@@ -66,7 +67,7 @@ class Snake {
         this.playerNumb.addEventListener('change', () => this.playerNumber(this.playerNumb.value));
 
         this.wall.addEventListener('click', () => this.changeWall());
-        this.play.addEventListener('click', () => this.startGame());
+        this.play.addEventListener('click', () => this.playerSettings());
 
         this.controls = [];
         this.players = [];
@@ -84,13 +85,25 @@ class Snake {
             y: 750
         }]
 
+        this.addPlayer(0, 'maroon');
+        this.addControls(0, 38, 40, 37, 39);
+            this.addPlayer(1, 'blue');
+            this.addControls(1, 87, 83, 65, 68);
+
+            this.addPlayer(2, 'purple');
+            this.addControls(2, 85, 74, 72, 75);
+
+            this.addPlayer(3, 'white');
+            this.addControls(3, 104, 101, 100, 102);
         this.onKeyDown = this.onKeyDown.bind(this);
+
         document.addEventListener('keydown', this.onKeyDown);
     }
 
     onKeyDown(e) {
         if(e.keyCode === 27) {
             this.stopGame();
+            this.input.style.display = "block";
         }
         if(e.keyCode === 32) {
             this.pauseGame();
@@ -159,10 +172,27 @@ class Snake {
             this.players[id].balls[i].x += 50 * (id % 2 ? -1 : 1) * i;
         }
     }
+    
 
+    playerSettings() {
+        if (this.setPlayers >= 2) {
+            this.addPlayer(1, 'blue');
+            this.addControls(1, 87, 83, 65, 68);
+        }
+
+        if (this.setPlayers >= 3) {
+            this.addPlayer(2, 'purple');
+            this.addControls(2, 85, 74, 72, 75);
+        }
+
+        if (this.setPlayers > 3) {
+            this.addPlayer(3, 'white');
+            this.addControls(3, 104, 101, 100, 102);
+        }
+        this.startGame();
+    }
 
     startGame() {
-        this.playerSetting();
         if (this.startClicked === true) { //preview would start be clicked or not
             this.resetGame();
         }
@@ -173,26 +203,10 @@ class Snake {
             this.init();
             this.painter();
             this.closeMenuToggle();
+            this.input.style.display = "none";
             this.drawn.style.display = 'none';
             this.gameOverContainer.style.display = 'none';
             this.startClicked = true;   
-        }
-    }
-
-    playerSetting() {
-        this.addControls(0, 38, 40, 37, 39);
-        this.addPlayer(0, 'maroon');
-        if (this.setPlayers > 1) {
-            this.addControls(1, 87, 83, 65, 68);
-            this.addPlayer(1, 'blue');
-        }
-        if (this.setPlayers > 2) {
-            this.addControls(2, 85, 74, 72, 75);
-            this.addPlayer(2, 'purple');
-        }
-        if (this.setPlayers > 3) {
-            this.addControls(3, 104, 101, 100, 102);
-            this.addPlayer(3, 'white');
         }
     }
 
@@ -210,7 +224,7 @@ class Snake {
         if (this.startClicked === true) {
             if (this.running === true) {
                 this.running = false;
-                if (this.gameOver === false) { //if stop was pressed first time
+                if (this.gameOver === false) {
                     this.openMenuToggle();
                 }
                 this.gameOver = false;
@@ -417,21 +431,78 @@ class Snake {
     }
     
     singleplayerGameOver() {
-        this.gameOver = false;
-        this.startGame();
+        this.input.style.display = "block";
         this.stopGame();
     }
 
     alertResult() {
-        this.gameOver = true;
-        this.init();
+        // this.gameOver = true;
+        // this.input.style.display = "block";
+        // console.log('alert');
+
+        // if (this.players[0].score === this.players[1].score === this.players[2].score === this.players[3].score) {
+        //     this.drawn.style.display = 'block';
+        // } else {
+        //     this.gameOverContainer.style.display = 'block';
+        //     this.arrayScore = [];
+        //     this.winner.innerHTML = '';
+    
+        //     this.scoreOutput();
+    
+        //     for (var i = 0; i < this.arrayScore.length; i++) {
+        //         this.winner.innerHTML += this.arrayScore[i] + '<br/>';
+        //     }
+        // }
+        // console.log('2');
+        // this.init();
         this.stopGame();
         this.scoreCounter();
+    }
+    
+    scoreOutput() { ///should be changed in a better and smaller function which sort it to and rank right
+        if (this.objScoreValue.scoreValue.textContent > this.objScoreValue.scoreValuePL2.textContent) {
+            this.arrayScore.push('1. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValue.textContent > this.objScoreValue.scoreValuePL3.textContent) {
+            this.arrayScore.push('2. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValue.textContent > this.objScoreValue.scoreValuePL4.textContent) {
+            this.arrayScore.push('3. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+        } else {
+            this.arrayScore.push('4. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+        }
+        
+        if (this.objScoreValue.scoreValuePL2.textContent > this.objScoreValue.scoreValue.textContent) {
+            this.arrayScore.push('1. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValuePL2.textContent > this.objScoreValue.scoreValuePL3.textContent) {
+            this.arrayScore.push('2. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValuePL2.textContent > this.objScoreValue.scoreValuePL4.textContent) {
+            this.arrayScore.push('3. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+        } else {
+            this.arrayScore.push('4. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+        }
+        
+        if (this.objScoreValue.scoreValuePL3.textContent > this.objScoreValue.scoreValue.textContent) {
+            this.arrayScore.push('1. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValuePL3.textContent > this.objScoreValue.scoreValuePL2.textContent) {
+            this.arrayScore.push('2. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValuePL3.textContent > this.objScoreValue.scoreValuePL4.textContent) {
+            this.arrayScore.push('3. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+        } else {
+            this.arrayScore.push('4. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+        }
+        
+        if (this.objScoreValue.scoreValuePL4.textContent > this.objScoreValue.scoreValue.textContent) {
+            this.arrayScore.push('1. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValuePL4.textContent > this.objScoreValue.scoreValuePL2.textContent) {
+            this.arrayScore.push('2. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+        } else if (this.objScoreValue.scoreValuePL4.textContent > this.objScoreValue.scoreValuePL3.textContent) {
+            this.arrayScore.push('3. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+        } else {
+            this.arrayScore.push('4. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+        }
     }
 
     scoreCounter(id, scoreValue, highscore) {
         if (!this.players[id]) {
-            console.log('return')
             return;
         }
         this.objScoreValue[scoreValue].innerHTML = 0;

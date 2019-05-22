@@ -7,24 +7,35 @@
 	<title>snake-the-game</title>
 </head>
 <style>
-   
 </style>
 <body>
 <section id="content__header" class="content__header">
 	<div id="content__header-wrapper" class="content__header-wrapper">
 		<ul id="content__header-menu" class="content__header-menu">
-			<li id="startBtn" class="content__header-menu-toggle">Singleplayer</li>
-			<li id="multiplayer" class="content__header-menu-toggle">Multiplayer</li>
-			<li id="difficulty" class="content__header-menu-toggle"><span id="difficultyDegreeValue">Normal:</span><br/>
+			<li id="players" class="content__header-menu-toggle">Players:
+				<img class="content__header-menu-images" id="snakes" src="assets/images/snakes.png"/>
+				<span class="resultInt" id="playerValue">1</span>
+				<input class="range" id="playerRange" type="range" value="1" min="1" max="4">
+			</li>
+			<li id="difficulty" class="content__header-menu-toggle">Speed(ms):
+				<span id="difficultyDegreeValue">Normal</span><br/>
 				<span class="resultInt" id="rangeValue">200</span>
 				<input class="range" id="range" type="range" value="200" min="100" max="500"  step="10">
+				<img class="content__header-menu-images" id="difficultyDegree" src="assets/images/difficulty.png"/>
 			</li>
 			<li id="wallHit" class="content__header-menu-toggle">Walls: 
 				<input type="checkbox" id="wallCheck">
-				<label id="wallResult" for="wallCheck" class="results">Aus</label> 
-			<li class="content__header-menu-toggle">Items</li>  <!--available which items drop, dropchance, when item should drop etc.-->
-			<li class="content__header-menu-toggle">Controls</li> <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
-			<li class="content__header-menu-toggle">Options</li> <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
+				<label id="wallResult" for="wallCheck" class="results">Aus</label>
+				<img class="content__header-menu-images" id="walls" src="assets/images/walls.jpg"/> 
+			<li class="content__header-menu-toggle">Items  <!--available which items drop, dropchance, when item should drop etc.-->
+				<img class="content__header-menu-images" id="items" src="assets/images/items.png"/>
+			</li>
+			<li class="content__header-menu-toggle">Controls <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
+				<img class="content__header-menu-images" id="keyboard" src="assets/images/keyboard.png"/>
+			</li> 
+			<li class="content__header-menu-toggle">Options  <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
+				<img class="content__header-menu-images" id="options" src="assets/images/settings.png"/>
+			</li>
 			<li class="content__header-menu-toggle">Current Score: <span class="results">Pl1
 				<span id="scoreResult" class="resultInt">0</span><br/>
 				</span>
@@ -50,15 +61,8 @@
 					<span id="highscoreResultPL4" class="resultInt">0</span>
 				</span>
 			</li>
+			<li class="content__header-menu-toggle" id="submitBtn">PLAY</li>
 		</ul>
-		<img class="content__header-menu-images" id="goBack" src="assets/images/back.png"/>
-		<img class="content__header-menu-images" id="snake" src="assets/images/snake.jpg"/>
-		<img class="content__header-menu-images" id="snakes" src="assets/images/snakes.png"/>
-		<img class="content__header-menu-images" id="difficultyDegree" src="assets/images/difficulty.png"/>
-		<img class="content__header-menu-images" id="walls" src="assets/images/walls.jpg"/>
-		<img class="content__header-menu-images" id="items" src="assets/images/items.png"/>
-		<img class="content__header-menu-images" id="keyboard" src="assets/images/keyboard.png"/>
-		<img class="content__header-menu-images" id="options" src="assets/images/settings.png"/>
 	</div>
 
 	<div id="content__header-intro-container" class="content__header-intro-container">

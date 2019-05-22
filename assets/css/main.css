@@ -84,41 +84,37 @@ html {
     width: 60px;
 }
 #snake {
-    top: 68px;
-    left: 380px;
+    left: 360px;
 }
 #snakes {
-    top: 140px;
-    left: 355px;
+    left: 330px;
 }
 #difficultyDegree {
     width: 100px;
-    top: 280px;
-    left: 475px;
+    left: 465px;
 }
 #walls {
     width: 80px;
-    top: 345px;
-    left: 375px;
+    left: 325px;
 }
 #items {
     width: 100px;
-    top: 408px;
-    left: 200px;
+    top: 41%;
 }
 #keyboard {
     width: 150px;
-    top: 450px;
-    left: 310px;
+    top: 46%;
 }
 #options {
     width: 70px;
-    top: 578px;
-    left: 265px;
+    left: 250px;
 }
 
 #difficulty, #wallHit {
     text-decoration: none;
+}
+#playerRange {
+    width: 100px;
 }
 #range {
     position: absolute;
@@ -153,23 +149,6 @@ li, img, select:hover {
     cursor: pointer;
 }
 
-/* #walls {
-    position: absolute;
-    font-size: 40px;
-    padding: 20px;
-    left: 43%;
-    top: 53.7%;
-    color: red;
-    font-weight: bold;
-    background: inherit;
-    border: none;
-} */
-/* #resetBtn {
-    display: none;
-} */
-/* #stopBtn {
-    display: none;
-} */
 #resumeBtn {
     display: none;
 }
@@ -183,18 +162,6 @@ li, img, select:hover {
     left: 475px;
     transform: rotate(180deg);
 }
-/* #resetBtn {
-    position: absolute;
-    width: 70px;
-    top: 20px;
-    left: 100px;
-}
-#start {
-    position: absolute;
-    width: 70px;
-    top: 20px;
-    left: 180px;
-} */
 
 .content__header-intro-container {
     position: relative;
@@ -230,4 +197,14 @@ li, img, select:hover {
     color: red;
 }
 
-
+#submitBtn {
+    display: block;
+    text-align: center;
+    margin-right: 45px;
+    border: 2px solid white;
+    color: greenyellow;
+    background: grey;
+    font-size: 60px;
+    padding: 0;
+    border-radius: 5px;
+}

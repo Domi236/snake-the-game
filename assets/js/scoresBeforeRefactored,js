@@ -1,0 +1,88 @@
+ // this.objScoreValue = [
+        //     document.getElementById('scoreResult'),
+        //     document.getElementById('scoreResultPL2'),
+        //     document.getElementById('scoreResultPL3'),
+        //     document.getElementById('scoreResultPL4')
+        // ];
+
+        // this.objHScore = [
+        //     document.getElementById('highscoreResult'),
+        //     document.getElementById('highscoreResultPL2'),
+        //     document.getElementById('highscoreResultPL3'),
+        //     document.getElementById('highscoreResultPL4')
+        // ];
+
+                this.arrayScore = [];
+
+        // this.input.style.display = "block";
+        // console.log('alert');
+        // console.log(this.players[0].score);
+
+        // if (this.players[0].score === this.players[1].score === this.players[2].score === this.players[3].score) {
+        //     this.drawn.style.display = 'block';
+        // } else {
+        //     this.gameOverContainer.style.display = 'block';
+        //     this.arrayScore = [];
+        //     this.winner.innerHTML = '';
+    
+        //     this.scoreOutput();
+    
+        //     for (var i = 0; i < this.arrayScore.length; i++) {
+        //         this.winner.innerHTML += this.arrayScore[i] + '<br/>';
+        //     }
+        // }
+
+                 // scoreOutput() { ///should be changed in a better and smaller function which sort it to and rank right
+    //     if (this.objScoreValue.scoreValue.textContent > this.objScoreValue.scoreValuePL2.textContent) {
+    //         this.arrayScore.push('1. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValue.textContent > this.objScoreValue.scoreValuePL3.textContent) {
+    //         this.arrayScore.push('2. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValue.textContent > this.objScoreValue.scoreValuePL4.textContent) {
+    //         this.arrayScore.push('3. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+    //     } else {
+    //         this.arrayScore.push('4. PLAYER I: ' + this.objScoreValue.scoreValue.textContent + ' POINTS');
+    //     }
+        
+    //     if (this.objScoreValue.scoreValuePL2.textContent > this.objScoreValue.scoreValue.textContent) {
+    //         this.arrayScore.push('1. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValuePL2.textContent > this.objScoreValue.scoreValuePL3.textContent) {
+    //         this.arrayScore.push('2. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValuePL2.textContent > this.objScoreValue.scoreValuePL4.textContent) {
+    //         this.arrayScore.push('3. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+    //     } else {
+    //         this.arrayScore.push('4. PLAYER II: ' + this.objScoreValue.scoreValuePL2.textContent + ' POINTS');
+    //     }
+        
+    //     if (this.objScoreValue.scoreValuePL3.textContent > this.objScoreValue.scoreValue.textContent) {
+    //         this.arrayScore.push('1. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValuePL3.textContent > this.objScoreValue.scoreValuePL2.textContent) {
+    //         this.arrayScore.push('2. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValuePL3.textContent > this.objScoreValue.scoreValuePL4.textContent) {
+    //         this.arrayScore.push('3. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+    //     } else {
+    //         this.arrayScore.push('4. PLAYER III: ' + this.objScoreValue.scoreValuePL3.textContent + ' POINTS');
+    //     }
+        
+    //     if (this.objScoreValue.scoreValuePL4.textContent > this.objScoreValue.scoreValue.textContent) {
+    //         this.arrayScore.push('1. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValuePL4.textContent > this.objScoreValue.scoreValuePL2.textContent) {
+    //         this.arrayScore.push('2. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+    //     } else if (this.objScoreValue.scoreValuePL4.textContent > this.objScoreValue.scoreValuePL3.textContent) {
+    //         this.arrayScore.push('3. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+    //     } else {
+    //         this.arrayScore.push('4. PLAYER IV: ' + this.objScoreValue.scoreValuePL4.textContent + ' POINTS');
+    //     }
+    // }
+
+    // scoreCounter(id, scoreValue, highscore) {
+    //     if (!this.players[id]) {
+    //         return;
+    //     }
+    //     this.objScoreValue[scoreValue].innerHTML = 0;
+    //     if (this.players[id] > this.objHScore[highscore].textContent) { 
+    //         this.objHScore[highscore].innerHTML = this.players[id].score;
+    //     }
+    //     if (this.players[id].score > this.totalHighscore.textContent) {
+    //         this.totalHighscore.innerHTML = this.players[id].score;
+    //     }
+    // }
