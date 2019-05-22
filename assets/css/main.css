@@ -87,7 +87,7 @@ html {
     left: 360px;
 }
 #snakes {
-    left: 330px;
+    left: 415px;
 }
 #difficultyDegree {
     width: 100px;
@@ -99,27 +99,31 @@ html {
 }
 #items {
     width: 100px;
-    top: 41%;
+    top: 32.5%;
 }
 #keyboard {
     width: 150px;
-    top: 46%;
+    top: 37.5%;
 }
 #options {
     width: 70px;
     left: 250px;
+    top: 52.5%;
 }
 
 #difficulty, #wallHit {
     text-decoration: none;
 }
 #playerRange {
+    position: absolute;
     width: 100px;
+    top: 4.5%;
+    right: 30%;
 }
 #range {
     position: absolute;
     left: 28%;
-    top: 29%;
+    top: 20%;
     font-weight: bold;
     font-size: 40px;
 }

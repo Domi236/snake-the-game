@@ -5,14 +5,14 @@ class Snake {
 
         this.drawn = document.getElementById('content__game-game-over-drawn');
         this.objScoreValue = [
-            document.getElementById('scoreResult'),
+            document.getElementById('scoreResultPL1'),
             document.getElementById('scoreResultPL2'),
             document.getElementById('scoreResultPL3'),
             document.getElementById('scoreResultPL4')
         ];
 
         this.objHScore = [
-            document.getElementById('highscoreResult'),
+            document.getElementById('highscoreResultPL1'),
             document.getElementById('highscoreResultPL2'),
             document.getElementById('highscoreResultPL3'),
             document.getElementById('highscoreResultPL4')
@@ -23,8 +23,7 @@ class Snake {
         this.start = false;
         this.startClicked = false;
         this.running = false;
-        this.moveSnake = false;
-        // this.counter = false;
+        this.moveSnake = false
         this.gameOver = false;
         
         this.menu = document.getElementById('content__header-wrapper');
@@ -305,6 +304,13 @@ class Snake {
                 if(snakeHead.x === this.snakeFoodxOne && snakeHead.y === this.snakeFoodyTwo){
                     this.players[id].score += 5;
                     this.objScoreValue[id].innerHTML = this.players[id].score;
+                    if (this.players[id].score > this.objHScore[id].textContent) { 
+                        this.objHScore[id].innerHTML = this.players[id].score;
+                    }
+                    if (this.players[id].score > this.totalHighscore.textContent) {
+                        this.totalHighscore.innerHTML = this.players[id].score;
+                    }
+
                     this.addBallToPlayer(id);
                     this.createFood();
                 }
@@ -410,6 +416,7 @@ class Snake {
         if (isAlive) {
             return;
         }
+        
         this.alertResult();
         if (this.getPlayerCount() === 1) {
             this.singleplayerGameOver();
@@ -424,25 +431,12 @@ class Snake {
 
     alertResult() {
         this.gameOver = true;
-        this.init();
-        this.stopGame();
-        this.scoreCounter();
+        this.objScoreValue[0].innerHTML = 0;
+        this.objScoreValue[1].innerHTML = 0;
+        this.objScoreValue[2].innerHTML = 0;
+        this.objScoreValue[3].innerHTML = 0;
     }
 
-    scoreCounter(id, scoreValue, highscore) {
-        if (!this.players[id]) {
-            console.log('return')
-            return;
-        }
-        this.objScoreValue[scoreValue].innerHTML = 0;
-        if (this.players[id] > this.objHScore[highscore].textContent) { 
-            this.objHScore[highscore].innerHTML = this.players[id].score;
-        }
-        if (this.players[id].score > this.totalHighscore.textContent) {
-            this.totalHighscore.innerHTML = this.players[id].score;
-        }
-    }
-    
     rangeSlider(value) {
         document.getElementById('rangeValue').innerHTML = value;
         this.speed = value;
