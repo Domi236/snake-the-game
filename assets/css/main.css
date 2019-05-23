@@ -199,9 +199,75 @@ li, img, select:hover {
     text-align: center;
     margin-right: 45px;
     border: 2px solid white;
-    color: greenyellow;
+    color: whitesmoke;
     background: grey;
     font-size: 60px;
     padding: 0;
     border-radius: 5px;
 }
+
+/*     keyboard-config      */
+/*//////////////////////////*/
+
+#content__keyboard-controls-wrapper {
+    display: none;
+    position: relative;
+    height: 98vh;
+    width: 69%;
+    background: yellowgreen;
+    border-radius: 40px;
+}
+
+.content__player-controls-headline {
+    padding-left: 40px;
+}
+
+.content__player-controls {
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    padding: 20px;
+    justify-content: space-around
+}
+.content__controls {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.content__controls-toggle {
+    border: 2px solid black;
+    background: white;
+    text-align: center;
+    width: 50px;
+    padding: 4px;
+}
+.content__controls-set-btn-wrapper{
+    display: flex;
+    justify-content: space-around;
+}
+#content__set-controls {
+    width: 40%;
+    font-size: 40px;
+    padding: 10px; 
+}
+
+#content__default-controls {
+    width: 40%;
+    font-size: 40px;
+    padding: 10px; 
+}
+.content__game-controls {
+    width: 350px;
+    padding-left: 40px;
+}
+#content__game-controls-leertaste {
+    padding-left: 30px;
+}
+#content__game-controls-escape {
+    padding-left: 50px;
+}
+
+/* .content__controls-toggle:nth-child(1){
+    border: none;
+} */

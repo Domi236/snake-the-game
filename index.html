@@ -30,7 +30,7 @@
 			<li class="content__header-menu-toggle">Items  <!--available which items drop, dropchance, when item should drop etc.-->
 				<img class="content__header-menu-images" id="items" src="assets/images/items.png"/>
 			</li>
-			<li class="content__header-menu-toggle">Controls <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
+			<li id="content__header-menu-controls" class="content__header-menu-toggle">Controls <!--steuerung Mehrspieler und Singleplayer Needed (changeable by the user -->
 				<img class="content__header-menu-images" id="keyboard" src="assets/images/keyboard.png"/>
 			</li> 
 			<li class="content__header-menu-toggle">Options  <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
@@ -73,6 +73,60 @@
 			<h3  class="content__header-intro-scores">THS(Total Highscore): <span id="content__header-intro-ths">0</span></h3>
 		</div>
 	</div>
+
+	<div id="content__keyboard-controls-wrapper">
+		<ul class="content__player-controls">
+			<li class="content__controls">UP:</li>
+			<li class="content__controls">DOWN:</li>
+			<li class="content__controls">LEFT:</li>
+			<li class="content__controls">RIGHT:</li>
+		</ul>
+		<h3 class="content__player-controls-headline">Add Controls for Player One</h3>
+		<ul class="content__player-controls">
+			<li class="content__controls-toggle">UP</li>
+			<li class="content__controls-toggle">DOWN</li>
+			<li class="content__controls-toggle">LEFT</li>
+			<li class="content__controls-toggle">RIGHT</li>
+		</ul>
+		<h3 class="content__player-controls-headline">Add Controls for Player Two</h3>
+		<ul class="content__player-controls">
+			<li class="content__controls-toggle">W</li>
+			<li class="content__controls-toggle">S</li>
+			<li class="content__controls-toggle">A</li>
+			<li class="content__controls-toggle">D</li>
+		</ul>
+		<h3 class="content__player-controls-headline">Add Controls for Player Three</h3>
+		<ul class="content__player-controls">
+			<li class="content__controls-toggle">U</li>
+			<li class="content__controls-toggle">J</li>
+			<li class="content__controls-toggle">H</li>
+			<li class="content__controls-toggle">K</li>
+		</ul>
+		<h3 class="content__player-controls-headline">Add Controls for Player Four</h3>
+		<ul class="content__player-controls">
+			<li class="content__controls-toggle">8</li>
+			<li class="content__controls-toggle">5</li>
+			<li class="content__controls-toggle">4</li>
+			<li class="content__controls-toggle">6</li>
+		</ul>
+
+		<h3 class="content__game-controls">Stop/Resume Game:<span id="content__game-controls-leertaste"> LEERTASTE</span></h3>
+		<h3 class="content__game-controls">Open/Close Menu:<span id="content__game-controls-escape"> ESCAPE</span></h3>
+
+		<div class="content__controls-set-btn-wrapper">
+			<button id="content__set-controls">Save Changes</button>
+			<button id="content__default-controls">Set config to default</button>
+		</div>
+
+		<div class="content__items-wrapper">
+			
+		</div>
+		
+
+		
+
+
+	</div>
 </section>
 
 <section class="content__game" id="content__game">
@@ -86,7 +140,6 @@
 			<h2 id="content__game-winner-first" class="content__game-winner"></h2>
 		</div>
 	</div>
-	
 </section>
 <script src="assets/js/main.js"></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
 Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.

@@ -30,6 +30,8 @@ class Snake {
         this.intro = document.getElementById('content__header-intro-container');
         this.game = document.getElementById('content__game');
         this.wall = document.getElementById('wallCheck');
+        this.controls = document.getElementById('content__header-menu-controls');
+        this.controlsConfig = document.getElementById('content__keyboard-controls-wrapper');
         this.gameOverContainer = document.getElementById('content__game-game-over-wrapper');
         this.winner = document.getElementById('content__game-winner-first');
 
@@ -65,6 +67,7 @@ class Snake {
         this.playerNumb.addEventListener('change', () => this.playerNumber(this.playerNumb.value));
 
         this.wall.addEventListener('click', () => this.changeWall());
+        this.controls.addEventListener('click', () => this.setControls());
         this.play.addEventListener('click', () => this.startGame());
 
         this.controls = [];
@@ -470,6 +473,11 @@ class Snake {
         } else {
             this.setWalls.innerHTML = 'Aus';
         }
+    }
+
+    setControls() {
+        this.intro.style.display = 'none';
+        this.controlsConfig.style.display = 'block';
     }
 
     closeMenuToggle() {
