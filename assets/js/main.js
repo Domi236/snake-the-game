@@ -31,7 +31,11 @@ class Snake {
         this.game = document.getElementById('content__game');
         this.wall = document.getElementById('wallCheck');
         this.controls = document.getElementById('content__header-menu-controls');
-        this.controlsConfig = document.getElementById('content__keyboard-controls-wrapper');
+        this.controlsConfig = document.getElementById('content__player-controls-display');
+        this.gameModes = document.getElementById('content__header-menu-game-mods');
+        this.gameModesConfig = document.getElementById('content__game-mods');
+        this.items = document.getElementById('content__header-menu-items');
+        this.itemsConfig = document.getElementById('content__items-wrapper');
         this.gameOverContainer = document.getElementById('content__game-game-over-wrapper');
         this.winner = document.getElementById('content__game-winner-first');
 
@@ -68,6 +72,8 @@ class Snake {
 
         this.wall.addEventListener('click', () => this.changeWall());
         this.controls.addEventListener('click', () => this.setControls());
+        this.gameModes.addEventListener('click', () => this.setGameMode());
+        this.items.addEventListener('click', () => this.setItems());
         this.play.addEventListener('click', () => this.startGame());
 
         this.controls = [];
@@ -477,7 +483,23 @@ class Snake {
 
     setControls() {
         this.intro.style.display = 'none';
+        this.itemsConfig.style.display = 'none'; 
+        this.gameModesConfig.style.display = 'none';  
         this.controlsConfig.style.display = 'block';
+    }
+
+    setGameMode() {
+        this.intro.style.display = 'none';
+        this.itemsConfig.style.display = 'none'; 
+        this.controlsConfig.style.display = 'none';
+        this.gameModesConfig.style.display = 'block';                
+    }
+
+    setItems() {
+        this.intro.style.display = 'none';
+        this.gameModesConfig.style.display = 'none';  
+        this.controlsConfig.style.display = 'none';
+        this.itemsConfig.style.display = 'block';                
     }
 
     closeMenuToggle() {

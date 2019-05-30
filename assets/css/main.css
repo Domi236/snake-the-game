@@ -209,7 +209,7 @@ li, img, select:hover {
 /*     keyboard-config      */
 /*//////////////////////////*/
 
-#content__keyboard-controls-wrapper {
+#content__player-controls-display {
     display: none;
     position: relative;
     height: 98vh;
@@ -219,6 +219,14 @@ li, img, select:hover {
 }
 
 .content__player-controls-headline {
+    text-align: center;
+}
+
+.content__player-controls-wrapper {
+   display: flex; 
+}
+
+.content__player-controls-subline {
     padding-left: 40px;
 }
 
@@ -241,6 +249,9 @@ li, img, select:hover {
     text-align: center;
     width: 50px;
     padding: 4px;
+}
+.content__player-controls-image-setting {
+    width: 250px;
 }
 .content__controls-set-btn-wrapper{
     display: flex;
@@ -268,6 +279,24 @@ li, img, select:hover {
     padding-left: 50px;
 }
 
-/* .content__controls-toggle:nth-child(1){
-    border: none;
-} */
+.content__items-wrapper {
+    display: none;
+}
+
+#content__game-mods {
+    display: none;
+    position: relative;
+    height: 98vh;
+    width: 69%;
+    background: yellowgreen;
+    border-radius: 40px;
+}
+
+#content__items-wrapper {
+    display: none;
+    position: relative;
+    height: 98vh;
+    width: 69%;
+    background: yellowgreen;
+    border-radius: 40px;
+}
