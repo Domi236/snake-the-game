@@ -1,6 +1,8 @@
 
 class Snake {
-    constructor() {
+    constructor(config) {
+
+
         this.speed = typeof this.speed !== 'undefined' ? this.speed: 200;
 
         this.drawn = document.getElementById('content__game-game-over-drawn');
@@ -50,11 +52,11 @@ class Snake {
         this.setWalls = document.getElementById('wallResult');
         this.play = document.getElementById('submitBtn');
 
-        this.foodFirstPoint = 50;
-        this.foodSecondPoint = 100;
+        this.foodFirstPoint = this.this.startingPointsX1;
+        this.foodSecondPoint = this.startingPointsY1;
 
-        this.foodArrayWidth = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750];
-        this.foodArrayHeight = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800];
+        this.foodArrayWidth = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 14, 145, 150, 155, 160, 165, 170, 175];
+        this.foodArrayHeight = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 60, 70, 75, 80];
 
         this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
         this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
@@ -79,22 +81,39 @@ class Snake {
         this.controls = [];
         this.players = [];
         this.startingPoints = [{
-            x: 0, 
-            y: 50
+            x: this.startingPointsX1, 
+            y: this.startingPointsY1
         },{
-            x: 1800,
-            y: 100
+            x: this.startingPointsX2,
+            y: this.startingPointsY2
         },{
-            x: 0,
-            y: 800
+            x: this.startingPointsX3,
+            y: this.startingPointsY3
         },{
-            x: 1800,
-            y: 750
+            x: this.startingPointsX4,
+            y: this.startingPointsY4
         }]
 
         this.onKeyDown = this.onKeyDown.bind(this);
         document.addEventListener('keydown', this.onKeyDown);
     }
+
+    checkWindowSize() {
+        this.windowWidth = document.body.offsetWidth;
+        this.windowHeight = document.body.offsetHeight;
+        console.log("Die aktuelle Fenstergröße\n Breite: " +  
+        this.windowWidth + "  Höhe: " + this.windowHeight + " Pixel")
+        this.startingPointsX1 = 0
+        this.startingPointsY1 = this.windowHeight/100 * 2.5  
+        this.startingPointsX2 = this.windowWidth/100 * 97.5  
+        this.startingPointsY2 = this.windowHeight/100 * 2.5 
+        this.startingPointsX3 = this.windowWidth/100 * 2.5  
+        this.startingPointsY3 = this.windowHeight/100 * 97.5  
+        this.startingPointsX4 = this.windowWidth/100 * 97.5  
+        this.startingPointsY4 = this.windowHeight/100 * 97.5  
+    } 
+
+    
 
     onKeyDown(e) {
         if(e.keyCode === 27) {
@@ -164,12 +183,13 @@ class Snake {
                 x: ball.x,
                 y: ball.y
             }
-            this.players[id].balls[i].x += 50 * (id % 2 ? -1 : 1) * i;
+            this.players[id].balls[i].x += 5 * (id % 2 ? -1 : 1) * i;
         }
     }
 
 
     startGame() {
+        this.checkWindowSize();
         this.playerSetting();
         if (this.startClicked === true) { //preview would start be clicked or not
             this.resetGame();
@@ -275,16 +295,16 @@ class Snake {
         
         switch (this.players[id].direction) {
             case "up":
-                newBall.y -= 50;
+                newBall.y -= 5;
                 break;
             case "down":
-                newBall.y += 50;
+                newBall.y += 5;
                 break;
             case "left":
-                newBall.x -= 50;
+                newBall.x -= 5;
                 break;
             case "right":
-                newBall.x += 50;
+                newBall.x += 5;
                 break;
         }
         this.players[id].balls.push(newBall);
@@ -342,19 +362,19 @@ class Snake {
         if (type === "snake") {
             this.players[id].balls.map((ball, ballIndex) => {
                 this.ctx.fillStyle = ballIndex === this.players[id].balls.length - 1 ? this.players[id].headColor : this.players[id].color;
-                this.ctx.fillRect(ball.x, ball.y, 48, 48);
+                this.ctx.fillRect(ball.x, ball.y, 5, 5);
             })
         }
 
         if (type === "food") {
             this.ctx.fillStyle = "#DF7401";
-            this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 48, 48);
+            this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 5, 5);
         }
     }
 
     static maybeWalkThroughWalls(ball) {
-        let maxX = 1800,
-        maxY = 850;
+        let maxX = 1845,
+        maxY = 895;
         if (ball.x > maxX) {
             ball.x = 0
         }
@@ -371,8 +391,8 @@ class Snake {
     }
 
     static checkWallCollision(ball) {
-        let maxX = 1800,
-        maxY = 850;
+        let maxX = 1845,
+        maxY = 895;
         
         if (ball.x > maxX || ball.x < 0 || ball.y > maxY || ball.y < 0) {
             return true;
