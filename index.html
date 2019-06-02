@@ -328,7 +328,10 @@ Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und g
 Fehlen beide Attribute wird das Script geladen und ausgeführt, dann wird das Laden und Parsen der Seite fortgesetzt.-->
 
 <script>
-
+function setFieldSize() {
+	var windowWidth = document.body.offsetWidth;
+	var windowHeight = document.body.offsetHeight;
+}
 var snake = new Snake({});
 
 </script>
