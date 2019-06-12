@@ -1,6 +1,7 @@
 
 class Snake {
-    constructor() {
+    constructor(config) {
+        
         this.speed = typeof this.speed !== 'undefined' ? this.speed: 200;
 
         this.drawn = document.getElementById('content__game-game-over-drawn');
@@ -18,14 +19,14 @@ class Snake {
             document.getElementById('highscoreResultPL4')
         ];
        
-        this.canvas = document.getElementById('canvas');
-        this.ctx = this.canvas.getContext('2d');
+
         this.start = false;
         this.startClicked = false;
         this.running = false;
         this.moveSnake = false
         this.gameOver = false;
-        
+        this.square = 20;
+
         this.menu = document.getElementById('content__header-wrapper');
         this.intro = document.getElementById('content__header-intro-container');
         this.game = document.getElementById('content__game');
@@ -50,22 +51,9 @@ class Snake {
         this.setWalls = document.getElementById('wallResult');
         this.play = document.getElementById('submitBtn');
 
-        this.foodFirstPoint = 50;
-        this.foodSecondPoint = 100;
-
-        this.foodArrayWidth = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750];
-        this.foodArrayHeight = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800];
-
-        this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
-        this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
-
-        this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
-        this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
-        this.snakeFoodyOne = this.foodSecondPoint + this.foody;
-        this.snakeFoodyTwo = this.foodFirstPoint + this.foody;	
-
         this.input.addEventListener('mousemove', () => this.rangeSlider(this.input.value));
         this.input.addEventListener('change', () => this.rangeSlider(this.input.value));
+        window.addEventListener('resize', () => this.fieldSizing());
 
         this.playerNumb.addEventListener('mousemove', () => this.playerNumber(this.playerNumb.value));
         this.playerNumb.addEventListener('change', () => this.playerNumber(this.playerNumb.value));
@@ -80,21 +68,87 @@ class Snake {
         this.players = [];
         this.startingPoints = [{
             x: 0, 
-            y: 50
+            y: this.square
         },{
-            x: 1800,
-            y: 100
+            x: this.fieldWidth - this.square,
+            y: this.square * 2
         },{
             x: 0,
-            y: 800
+            y: this.fieldHeight - (this.square * 2)
         },{
-            x: 1800,
-            y: 750
+            x: this.fieldWidth - this.square,
+            y: this.fieldHeight - (this.square * 3)
         }]
 
         this.onKeyDown = this.onKeyDown.bind(this);
         document.addEventListener('keydown', this.onKeyDown);
     }
+
+    fieldSizing() {
+        this.windowWidth = window.innerWidth;
+        this.windowHeight = window.innerHeight;
+        console.log('one');
+        if(this.windowWidth > 500 || this.windowHeight > 500) {  // need to make the same for resizeing and bevor the class
+            this.square = 30;
+        }
+        if (this.windowWidth > 1000 || this.windowHeight > 1000) {
+            this.square = 40;
+        }
+        if (this.windowWidth > 1500 || this.windowHeight > 1500) {
+            this.square = 50;
+        }
+        this.squareWidthRest = this.windowWidth % this.square;
+        this.squareHeightRest = this.windowHeight % this.square;
+
+        this.fieldWidth = this.windowWidth - this.squareWidthRest;
+        this.fieldHeight = this.windowHeight - this.squareHeightRest;
+
+        document.getElementById('content__game-canvas-container').innerHTML = "<canvas id='canvas' width='" + this.fieldWidth + "' height='" + this.fieldHeight + "'></canvas>";
+        this.canvas = document.getElementById('canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.squareWidthLength = this.windowWidth / this.square;
+        this.squareHeightLength = this.windowHeight / this.square;
+
+        this.startingPoints = [{
+            x: 0, 
+            y: this.square
+        },{
+            x: this.fieldWidth - this.square,
+            y: this.square * 2
+        },{
+            x: 0,
+            y: this.fieldHeight - (this.square)
+        },{
+            x: this.fieldWidth - this.square,
+            y: this.fieldHeight - (this.square * 2)
+        }]
+
+        // this.squareLength();
+        // console.log(this.windowHeight + 'h');
+        // console.log(this.windowWidth + 'w');
+        // console.log(this.squareHeightRest);
+        // console.log(this.squareWidthRest);
+        console.log(this.squareWidthLength);
+        console.log(this.squareHeightLength);
+        console.log(this.fieldWidth);
+        console.log(this.fieldHeight);
+        console.log(this.square);
+        console.log(this.startingPoints);
+    }
+
+    // squareLength() {
+    //     for(let i = 0; i < this.squareWidthLength; i++) {
+    //         i += this.square;
+    //         this.square += this.square;
+    //         console.log(this.square);
+    //         this.foodArrayWidth.push(this.square);
+    //     }
+
+    //     for(let i = 0; i < this.squareHeightLength; i++) {
+    //         this.square += this.square;
+    //         this.foodArrayHeight.push(this.square);
+    //     }
+    // }
 
     onKeyDown(e) {
         if(e.keyCode === 27) {
@@ -164,7 +218,7 @@ class Snake {
                 x: ball.x,
                 y: ball.y
             }
-            this.players[id].balls[i].x += 50 * (id % 2 ? -1 : 1) * i;
+            this.players[id].balls[i].x += this.square * (id % 2 ? -1 : 1) * i;
         }
     }
 
@@ -175,6 +229,7 @@ class Snake {
             this.resetGame();
         }
         if (this.start === false) {
+            this.fieldSizing();
             this.running = true; //preview is the programm running
             this.start = true;
             this.moveSnake = true; //preview move snake?
@@ -209,7 +264,7 @@ class Snake {
             this.start = false;
             this.painter();
             clearInterval(this.speedSetting);	
-            this.ctx.clearRect(0, 0, 1850, 900);
+            this.ctx.clearRect(0, 0, this.fieldWidth, this.fieldHeight);
         }
     }
 
@@ -261,8 +316,14 @@ class Snake {
     }
 
     createFood() {
-        this.foodx = this.foodArrayWidth[Math.floor(Math.random() * this.foodArrayWidth.length)];
-        this.foody = this.foodArrayHeight[Math.floor(Math.random() * this.foodArrayHeight.length)];
+        this.foodx = this.square * Math.floor(Math.random()* this.squareWidthLength);
+        this.foody = this.square * Math.floor(Math.random()* this.squareHeightLength);
+        this.foodFirstPoint = this.square;
+        this.foodSecondPoint = this.square * 2;
+        console.log(this.foodx);
+        console.log(this.foody);
+        console.log(this.foodFirstPoint);
+        console.log(this.foodSecondPoint);
 
         this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
         this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
@@ -275,16 +336,16 @@ class Snake {
         
         switch (this.players[id].direction) {
             case "up":
-                newBall.y -= 50;
+                newBall.y -= this.square;
                 break;
             case "down":
-                newBall.y += 50;
+                newBall.y += this.square;
                 break;
             case "left":
-                newBall.x -= 50;
+                newBall.x -= this.square;
                 break;
             case "right":
-                newBall.x += 50;
+                newBall.x += this.square;
                 break;
         }
         this.players[id].balls.push(newBall);
@@ -302,7 +363,7 @@ class Snake {
         }
 
         this.speedSetting = setInterval(() => {
-            this.ctx.clearRect(0, 0, 1850, 900);
+            this.ctx.clearRect(0, 0, this.fieldWidth, this.fieldHeight);
 
             this.players.map((player, id) => {
                 if (!player.active || player.dead){
@@ -342,19 +403,19 @@ class Snake {
         if (type === "snake") {
             this.players[id].balls.map((ball, ballIndex) => {
                 this.ctx.fillStyle = ballIndex === this.players[id].balls.length - 1 ? this.players[id].headColor : this.players[id].color;
-                this.ctx.fillRect(ball.x, ball.y, 48, 48);
+                this.ctx.fillRect(ball.x, ball.y, (this.square - 2), (this.square - 2));
             })
         }
 
         if (type === "food") {
             this.ctx.fillStyle = "#DF7401";
-            this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, 48, 48);
+            this.ctx.fillRect(this.snakeFoodxOne, this.snakeFoodyTwo, (this.square - 2), (this.square - 2));
         }
     }
 
     static maybeWalkThroughWalls(ball) {
-        let maxX = 1800,
-        maxY = 850;
+        let maxX = (this.fieldWidth - this.square),
+        maxY = (this.fieldHeight - this.square);
         if (ball.x > maxX) {
             ball.x = 0
         }
@@ -371,8 +432,8 @@ class Snake {
     }
 
     static checkWallCollision(ball) {
-        let maxX = 1800,
-        maxY = 850;
+        let maxX = (this.fieldWidth - this.square),
+        maxY = (this.fieldHeight - this.square);
         
         if (ball.x > maxX || ball.x < 0 || ball.y > maxY || ball.y < 0) {
             return true;
@@ -508,7 +569,7 @@ class Snake {
         this.intro.style.transition = '1s';
         this.intro.style.transform = 'translateX(120%)';
         this.game.style.transition = '1s';
-        this.game.style.transform = 'translateY(-101%)';
+        this.game.style.transform = 'translateY(-99%)';
     }
     
     openMenuToggle() {

@@ -312,8 +312,7 @@
 </section>
 
 <section class="content__game" id="content__game">
-	<div>
-		<canvas id="canvas" width="1850" height="900"></canvas>
+	<div id="content__game-canvas-container">
 	</div>
 	<h2 id="content__game-pause">PAUSE</h2>
 	<h2 id="content__game-game-over-drawn">DRAWN</h2>
@@ -323,13 +322,15 @@
 		</div>
 	</div>
 </section>
+
 <script src="assets/js/main.js"></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
 Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.
 Fehlen beide Attribute wird das Script geladen und ausgeführt, dann wird das Laden und Parsen der Seite fortgesetzt.-->
 
 <script>
 
-var snake = new Snake({});
+var snake = new Snake({
+});
 
 </script>
 
