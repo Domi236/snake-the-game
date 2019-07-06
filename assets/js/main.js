@@ -18,7 +18,11 @@ class Snake {
             document.getElementById('highscoreResultPL3'),
             document.getElementById('highscoreResultPL4')
         ];
-       
+
+        this.num = 0;
+        ///////////
+        this.log = console.log
+        ///////////
 
         this.start = false;
         this.startClicked = false;
@@ -26,6 +30,12 @@ class Snake {
         this.moveSnake = false
         this.gameOver = false;
         this.square = 20;
+        this.displayResults = false;
+
+        this.resultsFirstPlace = document.getElementById('content__game-winner--1');
+        this.resultsSecondPlace = document.getElementById('content__game-winner--2');
+        this.resultsThirdPlace = document.getElementById('content__game-winner--3');
+        this.resultsFourthPlace = document.getElementById('content__game-winner--4');
 
         this.menu = document.getElementById('content__header-wrapper');
         this.intro = document.getElementById('content__header-intro-container');
@@ -44,6 +54,8 @@ class Snake {
         this.difficulty = document.getElementById('difficultyDegreeValue');
         this.input = document.getElementById('range');
         this.pause = document.getElementById('content__game-pause');
+        this.replay = document.getElementById('content__game-replay-button');
+        this.goHome = document.getElementById('content__game-home-button');
 
         this.playerNumb = document.getElementById('playerRange');
         this.playerValue = document.getElementById('playerValue');
@@ -63,6 +75,8 @@ class Snake {
         this.gameModes.addEventListener('click', () => this.setGameMode());
         this.items.addEventListener('click', () => this.setItems());
         this.play.addEventListener('click', () => this.startGame());
+        this.replay.addEventListener('click', () => this.startGame());
+        this.goHome.addEventListener('click', () => this.backToHomeScreen());
 
         this.controls = [];
         this.players = [];
@@ -122,33 +136,7 @@ class Snake {
             x: this.fieldWidth - this.square,
             y: this.fieldHeight - (this.square * 2)
         }]
-
-        // this.squareLength();
-        // console.log(this.windowHeight + 'h');
-        // console.log(this.windowWidth + 'w');
-        // console.log(this.squareHeightRest);
-        // console.log(this.squareWidthRest);
-        console.log(this.squareWidthLength);
-        console.log(this.squareHeightLength);
-        console.log(this.fieldWidth);
-        console.log(this.fieldHeight);
-        console.log(this.square);
-        console.log(this.startingPoints);
     }
-
-    // squareLength() {
-    //     for(let i = 0; i < this.squareWidthLength; i++) {
-    //         i += this.square;
-    //         this.square += this.square;
-    //         console.log(this.square);
-    //         this.foodArrayWidth.push(this.square);
-    //     }
-
-    //     for(let i = 0; i < this.squareHeightLength; i++) {
-    //         this.square += this.square;
-    //         this.foodArrayHeight.push(this.square);
-    //     }
-    // }
 
     onKeyDown(e) {
         if(e.keyCode === 27) {
@@ -277,10 +265,11 @@ class Snake {
                     this.openMenuToggle();
                 }
                 this.gameOver = false;
+            } else if (this.displayResults === true) {
+                this.gameOverContainer.style.display = 'block';
             } else {
                 this.resumeGame();
-                this.drawn.style.display = 'none';
-                this.gameOverContainer.style.display = 'none';
+
             }
         }
     }
@@ -320,10 +309,6 @@ class Snake {
         this.foody = this.square * Math.floor(Math.random()* this.squareHeightLength);
         this.foodFirstPoint = this.square;
         this.foodSecondPoint = this.square * 2;
-        console.log(this.foodx);
-        console.log(this.foody);
-        console.log(this.foodFirstPoint);
-        console.log(this.foodSecondPoint);
 
         this.snakeFoodxOne = this.foodFirstPoint + this.foodx;
         this.snakeFoodxTwo = this.foodSecondPoint + this.foodx;
@@ -501,10 +486,66 @@ class Snake {
     }
 
     alertResult() {
-        this.objScoreValue[0].innerHTML = 0;
-        this.objScoreValue[1].innerHTML = 0;
-        this.objScoreValue[2].innerHTML = 0;
-        this.objScoreValue[3].innerHTML = 0;
+
+        let scoreArray = [ [], [], [], [] ];
+        let sortedArray = [ [], [], [], [] ];
+
+        for(let n = 0, i = 1; n < this.objScoreValue.length; n++, i++) {
+            scoreArray[n].push('Player ' + [i] + ' has ');
+            scoreArray[n].push(parseInt(this.objScoreValue[n].textContent));
+        }
+
+        for(let n = 0; n < sortedArray.length; n++) {
+            sortedArray[n].push(parseInt(this.objScoreValue[n].textContent));
+        }
+
+        sortedArray.sort().reverse();
+
+        sortedArray.forEach((item) => {
+
+            if(item.includes(scoreArray[0][1])) {
+                item.splice(1, 1, scoreArray[0][0])
+                scoreArray.splice(0, 1)
+
+            } else if(item.includes(scoreArray[1][1])) {
+                item.splice(1, 1, scoreArray[1][0])
+                scoreArray.splice(1, 1)
+
+            } else if(item.includes(scoreArray[2][1])) {
+                item.splice(1, 1, scoreArray[2][0])
+                scoreArray.splice(2, 1)
+
+            } else {
+                item.splice(1, 1, scoreArray[3][0])
+                scoreArray.splice(3, 1)
+            }
+
+            item.reverse();
+            item.splice(2, 1, ' Points');
+            // item.join('') why this not func??
+            // item.toString() why this not func??
+        });
+
+        for(let n = 1, i = 0; i < sortedArray.length; i++, n++) {
+            let result = document.getElementById(`content__game-winner--${[n]}`)
+            result.innerHTML = sortedArray[i];
+        }
+
+        this.objScoreValue.forEach((objScoreValues) => {
+            objScoreValues.innerHTML = 0;
+        });
+
+        this.gameOverContainer.style.display = 'block';
+        this.log(sortedArray);
+
+        this.running = false
+        this.displayResults = true;
+        this.stopGame();
+    }
+
+    backToHomeScreen() {
+        this.running = true
+        this.displayResults = false;
         this.stopGame();
         this.gameOver = true;
     }
