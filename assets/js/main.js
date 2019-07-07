@@ -101,7 +101,7 @@ class Snake {
     fieldSizing() {
         this.windowWidth = window.innerWidth;
         this.windowHeight = window.innerHeight;
-        console.log('one');
+        
         if(this.windowWidth > 500 || this.windowHeight > 500) {  // need to make the same for resizeing and bevor the class
             this.square = 30;
         }
@@ -231,6 +231,32 @@ class Snake {
     }
 
     playerSetting() {
+        // let setting = [  why this not func?
+        //     [
+        //         [0, 38, 40, 37, 39],
+        //         [0, 'maroon']
+        //     ],
+        //     [
+        //         [1, 87, 83, 65, 68],
+        //         [1, 'blue']
+        //     ],
+        //     [
+        //         [2, 85, 74, 72, 75],
+        //         [2, 'purple']
+        //     ],
+        //     [
+        //         [3, 104, 101, 100, 102],
+        //         [3, 'white']
+        //     ]
+        // ]
+        
+        // setting.forEach((item) => {
+        //         this.addControls(item[0]);
+        //         this.addPlayer(item[1]);
+        //         this.log(item[0])
+        //         this.log(item[1])
+        // })
+
         this.addControls(0, 38, 40, 37, 39);
         this.addPlayer(0, 'maroon');
         if (this.setPlayers > 1) {
@@ -487,37 +513,37 @@ class Snake {
 
     alertResult() {
 
-        let scoreArray = [ [], [], [], [] ];
-        let sortedArray = [ [], [], [], [] ];
+        let scores = [ [], [], [], [] ];
+        let sortedScores = [ [], [], [], [] ];
 
         for(let n = 0, i = 1; n < this.objScoreValue.length; n++, i++) {
-            scoreArray[n].push('Player ' + [i] + ' has ');
-            scoreArray[n].push(parseInt(this.objScoreValue[n].textContent));
+            scores[n].push('Player ' + [i] + ' has ');
+            scores[n].push(parseInt(this.objScoreValue[n].textContent));
         }
 
-        for(let n = 0; n < sortedArray.length; n++) {
-            sortedArray[n].push(parseInt(this.objScoreValue[n].textContent));
+        for(let n = 0; n < sortedScores.length; n++) {
+            sortedScores[n].push(parseInt(this.objScoreValue[n].textContent));
         }
 
-        sortedArray.sort().reverse();
+        sortedScores.sort().reverse();
 
-        sortedArray.forEach((item) => {
+        sortedScores.forEach((item) => {
 
-            if(item.includes(scoreArray[0][1])) {
-                item.splice(1, 1, scoreArray[0][0])
-                scoreArray.splice(0, 1)
+            if(item.includes(scores[0][1])) {
+                item.splice(1, 1, scores[0][0])
+                scores.splice(0, 1)
 
-            } else if(item.includes(scoreArray[1][1])) {
-                item.splice(1, 1, scoreArray[1][0])
-                scoreArray.splice(1, 1)
+            } else if(item.includes(scores[1][1])) {
+                item.splice(1, 1, scores[1][0])
+                scores.splice(1, 1)
 
-            } else if(item.includes(scoreArray[2][1])) {
-                item.splice(1, 1, scoreArray[2][0])
-                scoreArray.splice(2, 1)
+            } else if(item.includes(scores[2][1])) {
+                item.splice(1, 1, scores[2][0])
+                scores.splice(2, 1)
 
             } else {
-                item.splice(1, 1, scoreArray[3][0])
-                scoreArray.splice(3, 1)
+                item.splice(1, 1, scores[3][0])
+                scores.splice(3, 1)
             }
 
             item.reverse();
@@ -526,17 +552,14 @@ class Snake {
             // item.toString() why this not func??
         });
 
-        for(let n = 1, i = 0; i < sortedArray.length; i++, n++) {
+        for(let n = 1, i = 0; i < sortedScores.length; i++, n++) {
             let result = document.getElementById(`content__game-winner--${[n]}`)
-            result.innerHTML = sortedArray[i];
+            result.innerHTML = sortedScores[i];
         }
 
         this.objScoreValue.forEach((objScoreValues) => {
             objScoreValues.innerHTML = 0;
         });
-
-        this.gameOverContainer.style.display = 'block';
-        this.log(sortedArray);
 
         this.running = false
         this.displayResults = true;
