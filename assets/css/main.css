@@ -295,8 +295,8 @@ li, img, select:hover {
 #content__items-wrapper {
     display: none;
     position: relative;
-    height: 98vh;
-    width: 69%;
+    height: 96vh;
+    width: 68%;
     background: yellowgreen;
     border-radius: 40px;
 }

@@ -21,7 +21,7 @@ class Snake {
 
         this.num = 0;
         ///////////
-        this.log = console.log
+        this.log = console.log;
         ///////////
 
         this.start = false;
@@ -77,6 +77,9 @@ class Snake {
         this.play.addEventListener('click', () => this.startGame());
         this.replay.addEventListener('click', () => this.startGame());
         this.goHome.addEventListener('click', () => this.backToHomeScreen());
+
+        // this.maxX = this.fieldWidth - this.square;
+        // this.maxY = this.fieldHeight - this.square;
 
         this.controls = [];
         this.players = [];
@@ -226,6 +229,9 @@ class Snake {
             this.closeMenuToggle();
             this.drawn.style.display = 'none';
             this.gameOverContainer.style.display = 'none';
+            this.gameModesConfig.style.display = 'none';
+            this.itemsConfig.style.display = 'none';
+            this.controlsConfig.style.display = 'none';
             this.startClicked = true;   
         }
     }
@@ -425,8 +431,26 @@ class Snake {
     }
 
     static maybeWalkThroughWalls(ball) {
-        let maxX = (this.fieldWidth - this.square),
-        maxY = (this.fieldHeight - this.square);
+        this.windowWidth = window.innerWidth;
+        this.windowHeight = window.innerHeight;
+        
+        if(this.windowWidth > 500 || this.windowHeight > 500) {  // need to make the same for resizeing and bevor the class
+            this.square = 30;
+        }
+        if (this.windowWidth > 1000 || this.windowHeight > 1000) {
+            this.square = 40;
+        }
+        if (this.windowWidth > 1500 || this.windowHeight > 1500) {
+            this.square = 50;
+        }
+        this.squareWidthRest = this.windowWidth % this.square;
+        this.squareHeightRest = this.windowHeight % this.square;
+
+        this.fieldWidth = this.windowWidth - this.squareWidthRest;
+        this.fieldHeight = this.windowHeight - this.squareHeightRest;
+
+        let maxX = this.fieldWidth - this.square,
+        maxY = this.fieldHeight - this.square;
         if (ball.x > maxX) {
             ball.x = 0
         }
@@ -443,10 +467,35 @@ class Snake {
     }
 
     static checkWallCollision(ball) {
-        let maxX = (this.fieldWidth - this.square),
-        maxY = (this.fieldHeight - this.square);
+        this.windowWidth = window.innerWidth;
+        this.windowHeight = window.innerHeight;
+        
+        if(this.windowWidth > 500 || this.windowHeight > 500) {  // need to make the same for resizeing and bevor the class
+            this.square = 30;
+        }
+        if (this.windowWidth > 1000 || this.windowHeight > 1000) {
+            this.square = 40;
+        }
+        if (this.windowWidth > 1500 || this.windowHeight > 1500) {
+            this.square = 50;
+        }
+        this.squareWidthRest = this.windowWidth % this.square;
+        this.squareHeightRest = this.windowHeight % this.square;
+
+        this.fieldWidth = this.windowWidth - this.squareWidthRest;
+        this.fieldHeight = this.windowHeight - this.squareHeightRest;
+
+        let maxX = this.fieldWidth - this.square,
+        maxY = this.fieldHeight - this.square;
         
         if (ball.x > maxX || ball.x < 0 || ball.y > maxY || ball.y < 0) {
+            console.log(ball.x);
+            console.log(ball.y);
+            console.log(this.fieldWidth);
+            console.log(this.fieldHeight);
+            console.log(this.square);
+            console.log(maxX);
+            console.log(maxY);
             return true;
         }
         return false;
@@ -470,9 +519,11 @@ class Snake {
                 player.balls.map((ball, ballId) => {
                     if (this.wall.checked) {
                         this.players[id].balls[ballId] = Snake.maybeWalkThroughWalls(ball);
+                        console.log('checked');
                         return;
                     } 
                     if (Snake.checkWallCollision(ball)) {
+                        console.log('dead');
                         this.players[id].dead = true;
                     }
                 })
