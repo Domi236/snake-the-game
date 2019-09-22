@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<title>snake-the-game</title>
-</head>
-<style>
-</style>
-<body>
 <section id="content__header" class="content__header">
 	<div id="content__header-wrapper" class="content__header-wrapper">
 		<ul id="content__header-menu" class="content__header-menu">
@@ -36,30 +25,29 @@
 			<li id="content__header-menu-game-mods" class="content__header-menu-toggle">Game Modes  <!-- size, startTime, don't touch walls, go throw walls etc., color change-->
 				<img class="content__header-menu-images" id="options" src="assets/images/settings.png"/>
 			</li>
-			<li class="content__header-menu-toggle">Current Score: <span class="results">Pl1
-				<span id="scoreResultPL1" class="resultInt">0</span><br/>
-				</span>
-				<span class="results">Pl2
-					<span id="scoreResultPL2" class="resultInt">0</span>
-				</span>
-				<span class="results">Pl3
-					<span id="scoreResultPL3" class="resultInt">0</span>
-				</span>
-				<span class="results">Pl4
-					<span id="scoreResultPL4" class="resultInt">0</span>
-				</span></li>
-			<li class="content__header-menu-toggle">Highscore: <span class="results">Pl1
-					<span id="highscoreResultPL1" class="resultInt">0</span><br/>
-			 	</span>
-				<span class="results">Pl2
-					<span id="highscoreResultPL2" class="resultInt">0</span>
-				</span>
-				<span class="results">Pl3
-					<span id="highscoreResultPL3" class="resultInt">0</span>
-				</span>
-				<span class="results">Pl4
-					<span id="highscoreResultPL4" class="resultInt">0</span>
-				</span>
+
+			<li class="content__header-menu-toggle">Current Score: <span class="results">
+				<?php 
+				$scores = array('PL1' => 0,'PL2' => 0,'PL3' => 0,'PL4' => 0);
+				
+				foreach ($scores as $name => $value) {
+					echo "<span class='results'> " . $name . " <span id='scoreResult$name'" . "class='resultInt'>" . $value . "</span></span>";
+				};
+				?>
+			<li>
+			<li class="content__header-menu-toggle">Highscore: 
+				<?php 
+				// set cookies
+				if (!isset($_COOKIE['cookie'])) {
+					setcookie("scores[PL1]", 0, time() + (10 * 365 * 24 * 60 * 60));
+					setcookie("scores[PL2]", 0, time() + (10 * 365 * 24 * 60 * 60));
+					setcookie("scores[PL3]", 0, time() + (10 * 365 * 24 * 60 * 60));
+					setcookie("scores[PL4]", 0, time() + (10 * 365 * 24 * 60 * 60));
+				}
+					foreach ($_COOKIE['scores'] as $name => $value) {
+						echo "<span class='results'>" . " $name " ."<span id='highscoreResult$name'"." class='resultInt'> " . $value . "</span> </span>";
+					}
+				?>
 			</li>
 			<li class="content__header-menu-toggle" id="submitBtn">PLAY</li>
 		</ul>
@@ -310,34 +298,3 @@
 	</div>
 
 </section>
-
-<section class="content__game" id="content__game">
-	<div id="content__game-canvas-container">
-	</div>
-	<h2 id="content__game-pause">PAUSE</h2>
-	<h2 id="content__game-game-over-drawn">DRAWN</h2>
-	<div id="content__game-game-over-wrapper">
-		<div id="content__game-game-over-container">
-			<h1 id="content__game-winner--1" class="content__game-winner"></h1>
-			<h2 id="content__game-winner--2" class="content__game-winner"></h2>
-			<h3 id="content__game-winner--3" class="content__game-winner"></h3>
-			<h4 id="content__game-winner--4" class="content__game-winner"></h4>
-			<button type="button" id="content__game-replay-button" class="content__game-replay-button">Replay</button>
-			<button type="button" id="content__game-home-button" class="content__game-home-button">Home</button>
-		</div>
-	</div>
-</section>
-
-<script src="assets/js/main.js"></script> <!--Mit dem Attribut async wird das Script asynchron mit der Webseite ausgeführt, während diese weiter geladen und geparst wird.
-Mit dem Attribut defer wird das Script ausgeführt, wenn die Seite geladen und geparst ist.
-Fehlen beide Attribute wird das Script geladen und ausgeführt, dann wird das Laden und Parsen der Seite fortgesetzt.-->
-
-<script>
-
-var snake = new Snake({
-});
-
-</script>
-
-</body>
-</html>

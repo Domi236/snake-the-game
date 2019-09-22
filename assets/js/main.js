@@ -604,8 +604,36 @@ class Snake {
         });
 
         for(let n = 1, i = 0; i < sortedScores.length; i++, n++) {
-            let result = document.getElementById(`content__game-winner--${[n]}`)
+            let result = document.getElementById(`content__game-winner--${[n]}`);
             result.innerHTML = sortedScores[i];
+        }
+
+        //to save data in json but it does'nt work yet
+
+        for(let n = 1, i = 0; i < sortedScores.length; i++, n++) {
+            // for(let s=1; s < sortedScores.length; s++) {
+                if(document.getElementById(`content__game-winner--${[n]}`).textContent.includes(`Player1`)) {
+                    let result = document.getElementById(`content__game-winner-save-score--${[n]}`);
+                    result.value = document.getElementById(`content__game-winner--${[n]}`).textContent;
+                    console.log('yeah');
+                    
+                } else if (document.getElementById(`content__game-winner--${[n]}`).textContent.includes(`Player2`)){
+                    let result = document.getElementById(`content__game-winner-save-score--${[n]}`);
+                     result.value = document.getElementById(`content__game-winner--${[n]}`).textContent;
+                     console.log('yeah');
+                } else if (document.getElementById(`content__game-winner--${[n]}`).textContent.includes(`Player3`)) {
+                    let result = document.getElementById(`content__game-winner-save-score--${[n]}`);
+                     result.value = document.getElementById(`content__game-winner--${[n]}`).textContent;
+                     console.log('yeah');
+                } else if (document.getElementById(`content__game-winner--${[n]}`).textContent.includes(`Player4`)) {
+                    let result = document.getElementById(`content__game-winner-save-score--${[n]}`);
+                     result.value = document.getElementById(`content__game-winner--${[n]}`).textContent;
+                     console.log('yeah');
+                }
+            // }
+            
+            // let result = document.getElementById(`content__game-winner-save-score--${[n]}`);
+            // result.innerHTML = sortedScores[i];
         }
 
         this.objScoreValue.forEach((objScoreValues) => {
